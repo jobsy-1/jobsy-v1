@@ -1,32 +1,37 @@
 // src/pages/LandingPage.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+// Import all the section components
 import Header from '../components/Header';
+import HeroSection from '../components/HeroSection';
+import WhyJobsySection from '../components/WhyJobsySection';
+import WorkThatFeelsFunSection from '../components/WorkThatFeelsFunSection';
+import AboutUsSection from '../components/AboutUsSection';
+import ContactSection from '../components/ContactSection';
 
+// Main Landing Page component that assembles all the sections
 function LandingPage() {
   return (
-    // === Modified Main Container ===
-    // Added 'flex', 'flex-col' to enable flexbox layout in a column
-    <div className="min-h-screen bg-gray-100 flex flex-col"> {/* Example background color */}
+    // Main container for the entire landing page
+    // Added min-h-screen, w-full, and overflow-x-hidden
+    // w-full ensures it takes full width, overflow-x-hidden prevents horizontal scrolling
+    <div className="min-h-screen mx-auto w-[99vw] overflow-x-hidden"> {/* ADDED w-full overflow-x-hidden */}
 
-      {/* Header (remains the same) */}
+      {/* Render the Header component */}
       <Header />
 
-      {/* === Modified Main Content Section === */}
-      {/* Added 'flex-grow' to make this section take up remaining space */}
-      <main className="container mx-auto px-4 py-8 flex-grow"> {/* Added flex-grow */}
-        {/* Placeholder for landing page content */}
-        <h1 className="text-4xl font-bold text-center text-[#355C7D]">
-          Welcome to Jobsy
-        </h1>
-        <p className="mt-4 text-lg text-center text-gray-700">
-          Find your next freelance opportunity or the perfect freelancer for your project.
-        </p>
-        {/* Add more landing page content here */}
-      </main>
+      {/* Render all the section components */}
+      {/* Each section component manages its own padding and width */}
+      {/* HeroSection has padding-top to clear the fixed/sticky header */}
+      <HeroSection />
+      <WhyJobsySection />
+      <WorkThatFeelsFunSection />
+      <AboutUsSection />
+      <ContactSection />
 
-      {/* Footer (optional, add later - if present, flex-grow on main will push it to bottom) */}
-      {/* <footer>...</footer> */}
+      {/* Footer (Simple placeholder) */}
+      <footer className="py-8 text-center text-gray-500 text-sm bg-white"> {/* Added background */}
+        © {new Date().getFullYear()} Jobsy. All rights reserved.
+      </footer>
 
     </div>
   );
