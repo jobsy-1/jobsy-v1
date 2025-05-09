@@ -253,14 +253,14 @@ function SignUpPage() {
                   <button
                       type="button" // Use type="button" to prevent form submission
                       onClick={() => handleUserTypeSelect('hire')}
-                      className={`py-4 px-6 rounded-lg text-xl font-semibold transition-colors duration-300 ${formData.userType === 'hire' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
+                      className={`py-4 px-6 rounded-lg text-xl font-semibold transition-colors bg-[#e6e6fa] text-[#6a6a80] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white`}
                   >
                       {t('I want to Hire People')} {/* Translate button text */}
                   </button>
                    <button
                       type="button" // Use type="button" to prevent form submission
                       onClick={() => handleUserTypeSelect('work')}
-                       className={`py-4 px-6 rounded-lg text-xl font-semibold transition-colors duration-300 ${formData.userType === 'work' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
+                       className={`py-4 px-6 rounded-lg text-xl font-semibold transition-colors bg-[#ffd1dc] text-[#880808] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white`}
                   >
                       {t('I want to Find a Job')} {/* Translate button text */}
                   </button>
@@ -292,7 +292,7 @@ function SignUpPage() {
                <button
                  type="button"
                  onClick={handleBack}
-                 className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-gray-800 bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-2 focus::ring-offset-2 focus:ring-gray-300 transition duration-200 ease-in-out"
+                 className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-[#880808] bg-[#ffd1dc] hover:bg-gray-400 focus:outline-none focus:ring-2 focus::ring-offset-2 focus:ring-gray-300 transition duration-200 ease-in-out"
                >
                  {t('Back')} {/* Translate button text */}
                </button>
@@ -316,7 +316,7 @@ function SignUpPage() {
               <button
                 type="submit" // Use type="submit" to trigger form submission
                 disabled={loading} // Disable button when loading
-                className={`py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''} ml-auto`}
+                className={`py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-[#000080] bg-[#89cff0] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''} ml-auto`}
               >
                 {/* Translate button text based on loading state */}
                 {loading ? t('Registering...') : t('Complete Registration')}

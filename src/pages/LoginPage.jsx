@@ -137,7 +137,7 @@ function LoginPage() {
     <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Translate the page title */}
-        <h1 className="text-3xl font-bold text-center text-[#355C7D] mb-8">
+        <h1 className="text-3xl font-bold text-center text-[#60a09b] mb-8">
           {t('Log In')}
         </h1>
 
@@ -146,7 +146,7 @@ function LoginPage() {
           {/* Email Input */}
           <div>
             <label htmlFor="email" className="inline-block mb-2">
-              <span className="px-4 py-1 bg-[#F8B195] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+              <span className="px-4 py-1 text-[#6A6A80] bg-[#E6E6FA] font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
                 {t('Email Address')} {/* Translate label */}
               </span>
             </label>
@@ -164,7 +164,7 @@ function LoginPage() {
           {/* Password Input */}
           <div>
             <label htmlFor="password" className="inline-block mb-2">
-               <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+               <span className="px-4 py-1 bg-[#FADADD] text-[#A35C60] font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
                 {t('Password')} {/* Translate label */}
                </span>
             </label>
@@ -184,7 +184,7 @@ function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className={`py-3 px-8 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`py-3 px-8 border border-transparent rounded-full shadow-lg text-lg font-bold text-[#000080] bg-[#89cff0] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {/* Translate button text based on loading state */}
               {loading ? t('Logging In...') : t('Log In')}

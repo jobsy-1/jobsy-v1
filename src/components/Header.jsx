@@ -90,7 +90,7 @@ function Header() {
             {/* Using Link for internal navigation */}
             <Link
               to="/signup"
-              className="bg-[#60a09b] text-white py-1 px-3 sm:py-2 sm:px-6 rounded-full text-sm sm:text-lg font-semibold hover:bg-[#8e82b4] transition-colors flex-shrink-0"
+              className="bg-[#89cff0] text-white py-1 px-3 sm:py-2 sm:px-6 rounded-full text-sm sm:text-lg font-semibold hover:bg-[#8e82b4] transition-colors flex-shrink-0"
             >
               {/* Use t() for button text */}
               {t('Get Started')}
