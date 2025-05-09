@@ -27,7 +27,7 @@ function WorkThatFeelsFunSection() {
       {/* Added horizontal padding px-4 sm:px-6 */}
       <div className="max-w-4xl mx-auto text-center px-4 sm:px-6"> {/* Ensure padding is here */}
         {/* Section Title - Use t() for translation */}
-        <h2 className="text-4xl font-bold text-[#355C7D] mb-6">{t('Work that feels fun')}</h2>
+        <h2 className="text-4xl font-bold text-[#60a09b] mb-6">{t('Work that feels fun')}</h2>
         {/* Section Description - Use t() for translation */}
         <p className="text-gray-700 mb-12">{t('Explore a colorful world of job opportunities across various fields.')}</p>
 

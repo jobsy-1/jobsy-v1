@@ -35,7 +35,7 @@ function Header() {
     <header className="sticky top-0 w-full z-10 flex justify-center">
       {/* Inner container: The actual rounded yellow bar with padding and margin */}
       {/* Flex layout to arrange logo, nav/flags/cta */}
-      <div className="bg-[#FDFD96] rounded-full mx-2 my-2 px-3 py-1 flex justify-between items-center w-auto sm:w-auto">
+      <div className="mx-2 my-2 px-3 py-1 flex justify-between items-center w-auto sm:w-auto">
 
         {/* Logo - Links to the home page */}
         {/* Using Link for internal navigation */}

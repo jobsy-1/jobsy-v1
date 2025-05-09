@@ -163,7 +163,7 @@ function SignUpPage() {
     <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Translate the page title based on the current step */}
-        <h1 className="text-3xl font-bold text-center text-[#355C7D] mb-8">
+        <h1 className="text-3xl font-bold text-center text-[#60a09b] mb-8">
           {currentStep === 1 && t('Sign Up')}
           {currentStep === 2 && t('Terms and Conditions')}
           {currentStep === 3 && t('Choose Your Path')}
@@ -184,7 +184,7 @@ function SignUpPage() {
               {/* Email Input */}
               <div>
                 <label htmlFor="email" className="inline-block mb-2">
-                  <span className="px-4 py-1 bg-[#F8B195] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                  <span className="text-[#6A6A80] px-4 py-1 bg-[#E6E6FA] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
                     {t('Email Address')} {/* Translate label */}
                   </span>
                 </label>
@@ -203,7 +203,7 @@ function SignUpPage() {
               {/* Password Input */}
               <div>
                 <label htmlFor="password" className="inline-block mb-2">
-                   <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                   <span className="px-4 py-1 bg-[#FADADD] text-[#A35C60] font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
                     {t('Password')} {/* Translate label */}
                    </span>
                 </label>
@@ -305,7 +305,7 @@ function SignUpPage() {
               <button
                 type="button" // Important: Use type="button" to prevent form submission
                 onClick={handleNext}
-                className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ml-auto"
+                className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-[#004D4D] bg-[#B3EBF2] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ml-auto"
               >
                 {t('Next')} {/* Translate button text */}
               </button>

@@ -131,7 +131,7 @@ function DashboardPage() {
 
         {/* Header with Welcome and Logout */}
         <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-[#355C7D]">
+            <h1 className="text-3xl font-bold text-[#60a09b]">
                {/* Translate welcome message with interpolation for name */}
                {t('Welcome, {{name}}!', { name: profile?.full_name || t('User') })}
             </h1>
@@ -146,7 +146,7 @@ function DashboardPage() {
 
         {/* Section 1: Welcome / Coming Soon */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-[#F8B195]">
-          <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">{t('Updates & Contact')}</h2> {/* Translate title */}
+          <h2 className="text-2xl font-semibold text-[#60a09b] mb-4">{t('Updates & Contact')}</h2> {/* Translate title */}
           <p className="text-gray-700 mb-4">
             {t('Thanks for registering! Our platform is currently under development, with exciting features coming soon.')} {/* Translate paragraph */}
           </p>
@@ -163,7 +163,7 @@ function DashboardPage() {
 
         {/* Section 2: Google Form Link */}
          <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-[#A8E6CE]">
-             <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">{t('Help Us Improve')}</h2> {/* Translate title */}
+             <h2 className="text-2xl font-semibold text-[#60a09b] mb-4">{t('Help Us Improve')}</h2> {/* Translate title */}
              <p className="text-gray-700 mb-4">
                  {t('Please take a moment to provide us with valuable feedback by filling out this short form:')} {/* Translate paragraph */}
              </p>
@@ -172,7 +172,7 @@ function DashboardPage() {
                      href="YOUR_GOOGLE_FORM_LINK" // TODO: Replace with your actual Google Form link
                      target="_blank" // Open in a new tab
                      rel="noopener noreferrer" // Recommended for security when using target="_blank"
-                     className="inline-block py-3 px-8 border border-transparent rounded-md shadow-sm text-lg font-bold text-white bg-[#60a09b] hover:bg-[#70b0ab] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#60a09b] transition duration-200 ease-in-out"
+                     className="inline-block py-3 px-8 border border-transparent rounded-full shadow-sm text-lg font-bold text-[#100030] bg-[#C3B1E1] hover:bg-[#70b0ab] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#60a09b] transition duration-200 ease-in-out"
                  >
                      {t('Fill Out Form')} {/* Translate button text */}
                  </a>
@@ -182,7 +182,7 @@ function DashboardPage() {
 
         {/* Section 3: Profile Information */}
          <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-[#FFDEAD]">
-             <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">{t('Your Profile Information')}</h2> {/* Translate title */}
+             <h2 className="text-2xl font-semibold text-[#60a09b] mb-4">{t('Your Profile Information')}</h2> {/* Translate title */}
              {profile ? (
                  <div className="text-gray-700 space-y-2">
                      {/* Translate labels and potentially values if needed */}

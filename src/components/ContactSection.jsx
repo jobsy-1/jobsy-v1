@@ -14,7 +14,7 @@ function ContactSection() {
       {/* Added horizontal padding px-4 sm:px-6 - assuming this was added previously */}
       <div className="max-w-md mx-auto text-center px-4 sm:px-6"> {/* Ensure padding is here */}
         {/* Section Title - Use t() for translation */}
-        <h2 className="text-3xl md:text-4xl font-bold text-[#355C7D] mb-8">{t('Get In Touch')}</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-[#60a09b] mb-8">{t('Get In Touch')}</h2>
         {/* Contact information or a simple form placeholder - Use t() */}
         <p className="text-lg text-gray-700 mb-4">
           {t('Have questions or feedback? We\'d love to hear from you!')}
