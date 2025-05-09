@@ -4,158 +4,414 @@ import { initReactI18next } from 'react-i18next';
 
 // --- Translation Resources ---
 // This is where you'll store your translations for each language.
-// We'll start with basic placeholders.
-// You'll expand these objects with all the text used in your app.
+// Added all the strings used with t() in the components so far.
 const resources = {
   en: { // English translations
     translation: { // 'translation' is the default namespace
-      // Example translations:
+      // From Header.jsx
       "Jobsy": "Jobsy",
-      "About Us": "About Us",
-      "Contact Us": "Contact Us",
+      "About": "About", // Changed from "About Us" to match Header link text
+      "Contact": "Contact", // Changed from "Contact Us" to match Header link text
       "Why Jobsy?": "Why Jobsy?",
       "Work Fun": "Work Fun",
       "Get Started": "Get Started",
+      "Arabic": "Arabic", // For flag title
+      "Kurdish": "Kurdish", // For flag title
+      "English": "English", // For flag title
+
+      // From HeroSection.jsx
       "Where Talent Meets Opportunity.": "Where Talent Meets Opportunity.",
       "Find your next freelance opportunity or the perfect freelancer for your project. Jobsy connects talent and employers faster than ever.": "Find your next freelance opportunity or the perfect freelancer for your project. Jobsy connects talent and employers faster than ever.",
       "Learn More": "Learn More",
+      "Jobsy Hero Image": "Jobsy Hero Image", // Example alt text translation
+
+      // From WhyJobsySection.jsx
       "Post Jobs Instantly": "Post Jobs Instantly",
+      "Easily post jobs and get visibility in seconds. Connect with talent quickly!": "Easily post jobs and get visibility in seconds. Connect with talent quickly!",
       "Smart Matching": "Smart Matching",
+      "Jobsy connects you with the right candidates using intelligent algorithms.": "Jobsy connects you with the right candidates using intelligent algorithms.",
       "Real-Time Communication": "Real-Time Communication",
+      "Chat directly with applicants or clients within the platform.": "Chat directly with applicants or clients within the platform.",
+
+
+      // From WorkThatFeelsFunSection.jsx
       "Work that feels fun": "Work that feels fun",
       "Explore a colorful world of job opportunities across various fields.": "Explore a colorful world of job opportunities across various fields.",
+
+      // From FloatingTag.jsx (These are the tag labels)
+      "🧑‍🎨 Designer": "🧑‍🎨 Designer",
+      "💻 Developer": "💻 Developer",
+      "✍️ Writer": "✍️ Writer",
+      "📈 Marketer": "📈 Marketer",
+      "🎥 Video Editor": "🎥 Video Editor",
+      "🧑‍💼 Assistant": "🧑‍💼 Assistant",
+      "📊 Data Analyst": "📊 Data Analyst",
+      "📱 Mobile Dev": "📱 Mobile Dev",
+
+      // From AboutUsSection.jsx
       "About Jobsy": "About Jobsy",
+      "Jobsy is a platform dedicated to connecting talented freelancers with amazing opportunities. Our mission is to make finding work and hiring talent faster, easier, and more enjoyable. We believe in empowering individuals and businesses to achieve their goals through seamless connections.": "Jobsy is a platform dedicated to connecting talented freelancers with amazing opportunities. Our mission is to make finding work and hiring talent faster, easier, and more enjoyable. We believe in empowering individuals and businesses to achieve their goals through seamless connections.",
+
+      // From ContactSection.jsx
       "Get In Touch": "Get In Touch",
       "Have questions or feedback? We'd love to hear from you!": "Have questions or feedback? We'd love to hear from you!",
-      "Email Address": "Email Address", // From SignUpPage
-      "Password": "Password", // From SignUpPage
-      "Enter your email": "Enter your email", // From SignUpPage
-      "Create a password": "Create a password", // From SignUpPage
-      "Terms and Conditions": "Terms and Conditions", // From SignUpPage
-      "I agree to the": "I agree to the", // From SignUpPage
-      "Choose Your Path": "Choose Your Path", // From SignUpPage
-      "I want to Hire People": "I want to Hire People", // From SignUpPage
-      "I want to Find a Job": "I want to Find a Job", // From SignUpPage
-      "Set Up Your Profile (Hiring)": "Set Up Your Profile (Hiring)", // From SignUpPage
-      "Set Up Your Profile (Working)": "Set Up Your Profile (Working)", // From SignUpPage
-      "Full Name": "Full Name", // From SignUpPage
-      "Job Experience": "Job Experience", // From SignUpPage
-      "Enter your full name": "Enter your full name", // From SignUpPage
-      "Tell us about your work experience...": "Tell us about your work experience...", // From SignUpPage
-      "Already have an account?": "Already have an account?", // From SignUpPage
-      "Log In": "Log In", // From SignUpPage
-      "Next": "Next", // From SignUpPage
-      "Back": "Back", // From SignUpPage
-      "Create Profile": "Create Profile", // From SignUpPage
-      "Saving Profile...": "Saving Profile...", // From SignUpPage
-      "Creating Profile...": "Creating Profile...", // From SignUpPage
-      "Registration successful! Please check your email to verify your account.": "Registration successful! Please check your email to verify your account.", // From SignUpPage
-      "Registration successful, but failed to save profile details. Please update your profile later.": "Registration successful, but failed to save profile details. Please update your profile later.", // From SignUpPage
-      "An unexpected error occurred. Please try again.": "An unexpected error occurred. Please try again.", // From SignUpPage
-      "Please enter both email and password.": "Please enter both email and password.", // From SignUpPage
-      "You must agree to the terms and conditions.": "You must agree to the terms and conditions.", // From SignUpPage
-      "Please choose whether you want to hire or find a job.": "Please choose whether you want to hire or find a job.", // From SignUpPage
-      // Add more English translations here
+      "Email": "Email", // Changed from "Email Address" to match Contact section text
+
+      // From SignUpPage.jsx
+      "Sign Up": "Sign Up",
+      "Step {{currentStep}} of 4": "Step {{currentStep}} of 4", // Step indicator with interpolation
+      "Email Address": "Email Address",
+      "Password": "Password",
+      "Enter your email": "Enter your email",
+      "Create a password": "Create a password",
+      "Terms and Conditions": "Terms and Conditions",
+      "I agree to the": "I agree to the",
+      "Choose Your Path": "Choose Your Path",
+      "I want to Hire People": "I want to Hire People",
+      "I want to Find a Job": "I want to Find a Job",
+      "Complete Registration": "Complete Registration", // Final step title
+      "Click \"Complete Registration\" to create your account.": "Click \"Complete Registration\" to create your account.", // Final step paragraph
+      "You will receive an email to verify your address before you can log in and complete your profile.": "You will receive an email to verify your address before you can log in and complete your profile.", // Final step paragraph
+      "Next": "Next",
+      "Back": "Back",
+      "Registering...": "Registering...", // Submit button loading text
+      "Already have an account?": "Already have an account?",
+
+      // From CompleteProfilePage.jsx (Profile Setup)
+      "Loading profile...": "Loading profile...", // Loading text
+      "Failed to load profile data.": "Failed to load profile data.", // Error message
+      "Profile already complete. Redirecting...": "Profile already complete. Redirecting...", // Success message
+      "Complete Your Profile ({{userType}})": "Complete Your Profile ({{userType}})", // Title with interpolation
+      "Hiring": "Hiring", // User type display
+      "Working": "Working", // User type display
+      "Select Type": "Select Type", // User type fallback/prompt
+      "What do you want to do?": "What do you want to do?", // User type selection prompt
+      "Full Name": "Full Name",
+      "Nationality": "Nationality",
+      "Age": "Age",
+      "Gender": "Gender",
+      "Phone Number": "Phone Number",
+      "Known Languages (comma-separated)": "Known Languages (comma-separated)", // Label
+      "e.g., English, Spanish, French": "e.g., English, Spanish, French", // Placeholder
+      "Talent/Skills (comma-separated)": "Talent/Skills (comma-separated)", // Label
+      "e.g., Web Development, Graphic Design, Writing": "e.g., Web Development, Graphic Design, Writing", // Placeholder
+      "Job Experience": "Job Experience",
+      "Tell us about your work experience...": "Tell us about your work experience...", // Placeholder
+      "Save Profile": "Save Profile", // Submit button text
+      "Saving Profile...": "Saving Profile...", // Submit button loading text
+      "User not authenticated.": "User not authenticated.", // Error message
+      "Please fill out all required profile fields.": "Please fill out all required profile fields.", // Error message
+      "Please fill out all required job seeker profile fields.": "Please fill out all required job seeker profile fields.", // Error message
+      "User type is missing. Please select your user type.": "User type is missing. Please select your user type.", // Error message
+      "Profile created successfully!": "Profile created successfully!", // Success message
+
+      // From LoginPage.jsx
+      "Log In": "Log In", // Page title and button text
+      "Enter your email": "Enter your email", // Placeholder
+      "Enter your password": "Enter your password", // Placeholder
+      "Logging In...": "Logging In...", // Button loading text
+      "An error occurred while checking your profile.": "An error occurred while checking your profile.", // Error message
+      "Failed to log out.": "Failed to log out.", // Error message
+      "An error occurred after login. Please try again.": "An error occurred after login. Please try again.", // Error message
+      "Sign in failed. Please check your credentials.": "Sign in failed. Please check your credentials.", // Error message
+      "Don't have an account?": "Don't have an account?", // Text before link
+
+      // From DashboardPage.jsx
+      "Loading dashboard...": "Loading dashboard...", // Loading text
+      "Welcome, {{name}}!": "Welcome, {{name}}!", // Welcome message with interpolation
+      "User": "User", // Fallback name in welcome message
+      "Logout": "Logout", // Button text
+      "Updates & Contact": "Updates & Contact", // Section title
+      "Thanks for registering! Our platform is currently under development, with exciting features coming soon.": "Thanks for registering! Our platform is currently under development, with exciting features coming soon.", // Paragraph
+      "We will contact you via your provided phone number for any relevant job opportunities (if you are a job seeker).": "We will contact you via your provided phone number for any relevant job opportunities (if you are a job seeker).", // Paragraph
+      "If you are looking to hire people manually or have immediate inquiries, please feel free to contact us directly.": "If you are looking to hire people manually or have immediate inquiries, please feel free to contact us directly.", // Paragraph
+      "Contact Info": "Contact Info", // Label
+      "Help Us Improve": "Help Us Improve", // Section title
+      "Please take a moment to provide us with valuable feedback by filling out this short form:": "Please take a moment to provide us with valuable feedback by filling out this short form:", // Paragraph
+      "Fill Out Form": "Fill Out Form", // Button text
+      "Your Profile Information": "Your Profile Information", // Section title
+      "User Type": "User Type", // Profile label
+      "Full Name": "Full Name", // Profile label
+      "Nationality": "Nationality", // Profile label
+      "Age": "Age", // Profile label
+      "Gender": "Gender", // Profile label
+      "Phone Number": "Phone Number", // Profile label
+      "Known Languages": "Known Languages", // Profile label (simpler key for display)
+      "Talent/Skills": "Talent/Skills", // Profile label (simpler key for display)
+      "Job Experience": "Job Experience", // Profile label
+      "N/A": "N/A", // Display text for missing data
+      "Profile data not available.": "Profile data not available.", // Message when profile fetch fails
+      "Edit Profile": "Edit Profile", // Button text (commented out in code)
+
+      // Common Supabase Auth/Database Error Messages (Translate these for better user experience)
+      "Invalid login credentials": "Invalid login credentials",
+      "Email not confirmed": "Email not confirmed",
+      "User already registered": "User already registered",
+      // Add other common Supabase error messages you might encounter
     }
   },
   ar: { // Arabic translations
     translation: {
+      // Provide Arabic translations for all the keys above
       "Jobsy": "جوبسي",
-      "About Us": "من نحن",
-      "Contact Us": "اتصل بنا",
+      "About": "من نحن",
+      "Contact": "اتصل بنا",
       "Why Jobsy?": "لماذا جوبسي؟",
       "Work Fun": "عمل ممتع",
       "Get Started": "ابدأ الآن",
+      "Arabic": "العربية",
+      "Kurdish": "الكردية",
+      "English": "الإنجليزية",
+
       "Where Talent Meets Opportunity.": "حيث تلتقي المواهب بالفرص.",
       "Find your next freelance opportunity or the perfect freelancer for your project. Jobsy connects talent and employers faster than ever.": "ابحث عن فرصتك المستقلة التالية أو عن المستقل المثالي لمشروعك. جوبسي يربط بين المواهب وأصحاب العمل أسرع من أي وقت مضى.",
       "Learn More": "تعلم المزيد",
+      "Jobsy Hero Image": "صورة بطل جوبسي",
+
       "Post Jobs Instantly": "انشر الوظائف فوراً",
+      "Easily post jobs and get visibility in seconds. Connect with talent quickly!": "انشر الوظائف بسهولة واحصل على رؤية في ثوانٍ. تواصل مع المواهب بسرعة!",
       "Smart Matching": "مطابقة ذكية",
+      "Jobsy connects you with the right candidates using intelligent algorithms.": "جوبسي يربطك بالمرشحين المناسبين باستخدام خوارزميات ذكية.",
       "Real-Time Communication": "تواصل فوري",
+      "Chat directly with applicants or clients within the platform.": "تحدث مباشرة مع المتقدمين أو العملاء داخل المنصة.",
+
       "Work that feels fun": "عمل ممتع",
       "Explore a colorful world of job opportunities across various fields.": "استكشف عالمًا ملونًا من فرص العمل في مختلف المجالات.",
+
+      "🧑‍🎨 Designer": "🧑‍🎨 مصمم",
+      "💻 Developer": "💻 مطور",
+      "✍️ Writer": "✍️ كاتب",
+      "📈 Marketer": "📈 مسوق",
+      "🎥 Video Editor": "🎥 محرر فيديو",
+      "🧑‍💼 Assistant": "🧑‍💼 مساعد",
+      "📊 Data Analyst": "📊 محلل بيانات",
+      "📱 Mobile Dev": "📱 مطور تطبيقات جوال",
+
       "About Jobsy": "عن جوبسي",
+      "Jobsy is a platform dedicated to connecting talented freelancers with amazing opportunities. Our mission is to make finding work and hiring talent faster, easier, and more enjoyable. We believe in empowering individuals and businesses to achieve their goals through seamless connections.": "جوبسي هي منصة مخصصة لربط المستقلين الموهوبين بفرص مذهلة. مهمتنا هي جعل العثور على عمل وتوظيف المواهب أسرع وأسهل وأكثر متعة. نؤمن بتمكين الأفراد والشركات لتحقيق أهدافهم من خلال اتصالات سلسة.",
+
       "Get In Touch": "تواصل معنا",
       "Have questions or feedback? We'd love to hear from you!": "هل لديك أسئلة أو ملاحظات؟ يسعدنا أن نسمع منك!",
-      "Email Address": "البريد الإلكتروني", // From SignUpPage
-      "Password": "كلمة المرور", // From SignUpPage
-      "Enter your email": "أدخل بريدك الإلكتروني", // From SignUpPage
-      "Create a password": "أنشئ كلمة مرور", // From SignUpPage
-      "Terms and Conditions": "الشروط والأحكام", // From SignUpPage
-      "I agree to the": "أوافق على", // From SignUpPage
-      "Choose Your Path": "اختر مسارك", // From SignUpPage
-      "I want to Hire People": "أريد توظيف أشخاص", // From SignUpPage
-      "I want to Find a Job": "أريد البحث عن وظيفة", // From SignUpPage
-      "Set Up Your Profile (Hiring)": "إعداد ملفك الشخصي (للتوظيف)", // From SignUpPage
-      "Set Up Your Profile (Working)": "إعداد ملفك الشخصي (للعمل)", // From SignUpPage
-      "Full Name": "الاسم الكامل", // From SignUpPage
-      "Job Experience": "الخبرة العملية", // From SignUpPage
-      "Enter your full name": "أدخل اسمك الكامل", // From SignUpPage
-      "Tell us about your work experience...": "أخبرنا عن خبرتك العملية...", // From SignUpPage
-      "Already have an account?": "هل لديك حساب بالفعل؟", // From SignUpPage
-      "Log In": "تسجيل الدخول", // From SignUpPage
-      "Next": "التالي", // From SignUpPage
-      "Back": "السابق", // From SignUpPage
-      "Create Profile": "إنشاء ملف شخصي", // From SignUpPage
-      "Saving Profile...": "جاري حفظ الملف الشخصي...", // From SignUpPage
-      "Creating Profile...": "جاري إنشاء الملف الشخصي...", // From SignUpPage
-      "Registration successful! Please check your email to verify your account.": "تم التسجيل بنجاح! يرجى التحقق من بريدك الإلكتروني لتأكيد حسابك.", // From SignUpPage
-      "Registration successful, but failed to save profile details. Please update your profile later.": "تم التسجيل بنجاح، ولكن فشل حفظ تفاصيل الملف الشخصي. يرجى تحديث ملفك الشخصي لاحقًا.", // From SignUpPage
-      "An unexpected error occurred. Please try again.": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.", // From SignUpPage
-      "Please enter both email and password.": "الرجاء إدخال البريد الإلكتروني وكلمة المرور.", // From SignUpPage
-      "You must agree to the terms and conditions.": "يجب عليك الموافقة على الشروط والأحكام.", // From SignUpPage
-      "Please choose whether you want to hire or find a job.": "الرجاء اختيار ما إذا كنت تريد التوظيف أو البحث عن وظيفة.", // From SignUpPage
-      // Add more Arabic translations here
+      "Email": "البريد الإلكتروني",
+
+      "Sign Up": "التسجيل",
+      "Step {{currentStep}} of 4": "الخطوة {{currentStep}} من 4",
+      "Email Address": "البريد الإلكتروني",
+      "Password": "كلمة المرور",
+      "Enter your email": "أدخل بريدك الإلكتروني",
+      "Create a password": "أنشئ كلمة مرور",
+      "Terms and Conditions": "الشروط والأحكام",
+      "I agree to the": "أوافق على",
+      "Choose Your Path": "اختر مسارك",
+      "I want to Hire People": "أريد توظيف أشخاص",
+      "I want to Find a Job": "أريد البحث عن وظيفة",
+      "Complete Registration": "إكمال التسجيل",
+      "Click \"Complete Registration\" to create your account.": "انقر على \"إكمال التسجيل\" لإنشاء حسابك.",
+      "You will receive an email to verify your address before you can log in and complete your profile.": "ستتلقى رسالة بريد إلكتروني لتأكيد عنوانك قبل أن تتمكن من تسجيل الدخول وإكمال ملفك الشخصي.",
+      "Next": "التالي",
+      "Back": "السابق",
+      "Registering...": "جاري التسجيل...",
+      "Already have an account?": "هل لديك حساب بالفعل؟",
+
+
+      "Loading profile...": "جاري تحميل الملف الشخصي...",
+      "Failed to load profile data.": "فشل تحميل بيانات الملف الشخصي.",
+      "Profile already complete. Redirecting...": "الملف الشخصي مكتمل بالفعل. جاري إعادة التوجيه...",
+      "Complete Your Profile ({{userType}})": "إكمال ملفك الشخصي ({{userType}})",
+      "Hiring": "للتوظيف",
+      "Working": "للعمل",
+      "Select Type": "اختر النوع",
+      "What do you want to do?": "ماذا تريد أن تفعل؟",
+      "Full Name": "الاسم الكامل",
+      "Nationality": "الجنسية",
+      "Age": "العمر",
+      "Gender": "الجنس",
+      "Phone Number": "رقم الهاتف",
+      "Known Languages (comma-separated)": "اللغات المعروفة (مفصولة بفاصلة)",
+      "e.g., English, Spanish, French": "مثال: الإنجليزية، الإسبانية، الفرنسية",
+      "Talent/Skills (comma-separated)": "المواهب/المهارات (مفصولة بفاصلة)",
+      "e.g., Web Development, Graphic Design, Writing": "مثال: تطوير الويب، تصميم الجرافيك، الكتابة",
+      "Job Experience": "الخبرة العملية",
+      "Tell us about your work experience...": "أخبرنا عن خبرتك العملية...",
+      "Save Profile": "حفظ الملف الشخصي",
+      "Saving Profile...": "جاري حفظ الملف الشخصي...",
+      "User not authenticated.": "المستخدم غير مصادق عليه.",
+      "Please fill out all required profile fields.": "الرجاء ملء جميع حقول الملف الشخصي المطلوبة.",
+      "Please fill out all required job seeker profile fields.": "الرجاء ملء جميع حقول الملف الشخصي المطلوبة للباحثين عن عمل.",
+      "User type is missing. Please select your user type.": "نوع المستخدم مفقود. الرجاء اختيار نوع المستخدم الخاص بك.",
+      "Profile created successfully!": "تم إنشاء الملف الشخصي بنجاح!",
+
+      "Log In": "تسجيل الدخول",
+      "Enter your email": "أدخل بريدك الإلكتروني",
+      "Enter your password": "أدخل كلمة المرور",
+      "Logging In...": "جاري تسجيل الدخول...",
+      "An error occurred while checking your profile.": "حدث خطأ أثناء التحقق من ملفك الشخصي.",
+      "Failed to log out.": "فشل تسجيل الخروج.",
+      "An error occurred after login. Please try again.": "حدث خطأ بعد تسجيل الدخول. الرجاء المحاولة مرة أخرى.",
+      "Sign in failed. Please check your credentials.": "فشل تسجيل الدخول. الرجاء التحقق من بيانات الاعتماد الخاصة بك.",
+      "Don't have an account?": "ليس لديك حساب؟",
+
+      "Loading dashboard...": "جاري تحميل لوحة التحكم...",
+      "Welcome, {{name}}!": "مرحباً بك، {{name}}!",
+      "User": "مستخدم",
+      "Logout": "تسجيل الخروج",
+      "Updates & Contact": "التحديثات والاتصال",
+      "Thanks for registering! Our platform is currently under development, with exciting features coming soon.": "شكراً لتسجيلك! منصتنا قيد التطوير حالياً، مع ميزات مثيرة قادمة قريباً.",
+      "We will contact you via your provided phone number for any relevant job opportunities (if you are a job seeker).": "سنتواصل معك عبر رقم هاتفك المقدم لأي فرص عمل ذات صلة (إذا كنت باحثاً عن عمل).",
+      "If you are looking to hire people manually or have immediate inquiries, please feel free to contact us directly.": "إذا كنت تبحث عن توظيف أشخاص يدوياً أو لديك استفسارات عاجلة، فلا تتردد في الاتصال بنا مباشرة.",
+      "Contact Info": "معلومات الاتصال",
+      "Help Us Improve": "ساعدنا على التحسين",
+      "Please take a moment to provide us with valuable feedback by filling out this short form:": "الرجاء تخصيص لحظة لتقديم ملاحظات قيمة لنا عن طريق ملء هذا النموذج القصير:",
+      "Fill Out Form": "املأ النموذج",
+      "Your Profile Information": "معلومات ملفك الشخصي",
+      "User Type": "نوع المستخدم",
+      "Full Name": "الاسم الكامل",
+      "Nationality": "الجنسية",
+      "Age": "العمر",
+      "Gender": "الجنس",
+      "Phone Number": "رقم الهاتف",
+      "Known Languages": "اللغات المعروفة",
+      "Talent/Skills": "المواهب/المهارات",
+      "Job Experience": "الخبرة العملية",
+      "N/A": "غير متوفر",
+      "Profile data not available.": "بيانات الملف الشخصي غير متوفرة.",
+      "Edit Profile": "تعديل الملف الشخصي",
+
+      "Invalid login credentials": "بيانات تسجيل الدخول غير صالحة",
+      "Email not confirmed": "البريد الإلكتروني غير مؤكد",
+      "User already registered": "المستخدم مسجل بالفعل",
     }
   },
   ku: { // Kurdish translations (Sorani dialect example)
     translation: {
+      // Provide Kurdish translations for all the keys above
       "Jobsy": "جۆبسی",
-      "About Us": "دەربارەی ئێمە",
-      "Contact Us": "پەیوەندی بگرە",
+      "About": "دەربارە",
+      "Contact": "پەیوەندی",
       "Why Jobsy?": "بۆچی جۆبسی؟",
       "Work Fun": "کاری خۆش",
       "Get Started": "دەستپێبکە",
+      "Arabic": "عەرەبی",
+      "Kurdish": "کوردی",
+      "English": "ئینگلیزی",
+
       "Where Talent Meets Opportunity.": "شوێنێک کە بەهرە و دەرفەت بەیەک دەگەن.",
       "Find your next freelance opportunity or the perfect freelancer for your project. Jobsy connects talent and employers faster than ever.": "دەرفەتی کاری سەربەخۆی داهاتووت یان سەربەخۆی گونجاو بۆ پڕۆژەکەت بدۆزەرەوە. جۆبسی بەهرەمەندەکان و خاوەنکارەکان زووتر لە جاران پێکەوە دەبەستێتەوە.",
       "Learn More": "زیاتر بزانە",
+      "Jobsy Hero Image": "وێنەی پاڵەوانی جۆبسی",
+
       "Post Jobs Instantly": "ڕاستەوخۆ کار بڵاو بکەرەوە",
+      "Easily post jobs and get visibility in seconds. Connect with talent quickly!": "بە ئاسانی کار بڵاو بکەرەوە و لە چەند چرکەیەکدا ببینرێ. خێرا پەیوەندی بە بەهرەمەندەکانەوە بکە!",
       "Smart Matching": "هاوتاکردنی زیرەک",
+      "Jobsy connects you with the right candidates using intelligent algorithms.": "جۆبسی تۆ بە بەربژێرە گونجاوەکانەوە دەبەستێتەوە بە بەکارهێنانی ئەلگۆریتمی زیرەک.",
       "Real-Time Communication": "پەیوەندی ڕاستەوخۆ",
+      "Chat directly with applicants or clients within the platform.": "ڕاستەوخۆ لەناو پلاتفۆرمەکەدا لەگەڵ داواکاران یان کڕیاران قسە بکە.",
+
       "Work that feels fun": "کارێک کە هەستی خۆشی پێبکەیت",
       "Explore a colorful world of job opportunities across various fields.": "جیهانێکی ڕەنگاوڕەنگی هەلی کار لە بوارە جیاوازەکاندا بگەڕێ.",
+
+      "🧑‍🎨 Designer": "🧑‍🎨 دیزاینەر",
+      "💻 Developer": "💻 پەرەپێدەر",
+      "✍️ Writer": "✍️ نووسەر",
+      "📈 Marketer": "📈 مارکێتەر",
+      "🎥 Video Editor": "🎥 مۆنتاژکار",
+      "🧑‍💼 Assistant": "🧑‍💼 یاریدەدەر",
+      "📊 Data Analyst": "📊 شیکەرەوەی داتا",
+      "📱 Mobile Dev": "📱 پەرەپێدەری مۆبایل",
+
       "About Jobsy": "دەربارەی جۆبسی",
+      "Jobsy is a platform dedicated to connecting talented freelancers with amazing opportunities. Our mission is to make finding work and hiring talent faster, easier, and more enjoyable. We believe in empowering individuals and businesses to achieve their goals through seamless connections.": "جۆبسی پلاتفۆرمێکە تایبەتە بە بەستنەوەی سەربەخۆ بەهرەمەندەکان بە دەرفەتی ناوازەوە. ئەرکی ئێمە ئەوەیە دۆزینەوەی کار و دامەزراندنی بەهرەمەندەکان خێراتر، ئاسانتر و خۆشتر بکەین. ئێمە باوەڕمان بە بەهێزکردنی تاکەکان و بزنسەکان هەیە بۆ گەیشتن بە ئامانجەکانیان لە ڕێگەی پەیوەندییە بێ کێشەکانەوە.",
+
       "Get In Touch": "پەیوەندی بگرە",
       "Have questions or feedback? We'd love to hear from you!": "پرسیار یان سەرنجت هەیە؟ حەزمان لێیە گوێبیستت بین!",
-      "Email Address": "ناونیشانی ئیمەیڵ", // From SignUpPage
-      "Password": "وشەی نهێنی", // From SignUpPage
-      "Enter your email": "ئیمەیڵەکەت بنووسە", // From SignUpPage
-      "Create a password": "وشەی نهێنی دروست بکە", // From SignUpPage
-      "Terms and Conditions": "مەرج و ڕێساکان", // From SignUpPage
-      "I agree to the": "من ڕازیم بە", // From SignUpPage
-      "Choose Your Path": "ڕێگاکەت هەڵبژێرە", // From SignUpPage
-      "I want to Hire People": "دەمەوێت خەڵک دامەزرێنم", // From SignUpPage
-      "I want to Find a Job": "دەمەوێت کار بدۆزمەوە", // From SignUpPage
-      "Set Up Your Profile (Hiring)": "ڕێکخستنی پڕۆفایلەکەت (بۆ دامەزراندن)", // From SignUpPage
-      "Set Up Your Profile (Working)": "ڕێکخستنی پڕۆفایلەکەت (بۆ کارکردن)", // From SignUpPage
-      "Full Name": "ناوی تەواو", // From SignUpPage
-      "Job Experience": "ئەزموونی کار", // From SignUpPage
-      "Enter your full name": "ناوی تەواوت بنووسە", // From SignUpPage
-      "Tell us about your work experience...": "باس لە ئەزموونی کارەکەت بکە...", // From SignUpPage
-      "Already have an account?": "پێشتر هەژمارت هەیە؟", // From SignUpPage
-      "Log In": "چوونە ژوورەوە", // From SignUpPage
-      "Next": "دواتر", // From SignUpPage
-      "Back": "پێشتر", // From SignUpPage
-      "Create Profile": "دروستکردنی پڕۆفایل", // From SignUpPage
-      "Saving Profile...": "پڕۆفایلەکە پاشەکەوت دەکرێت...", // From SignUpPage
-      "Creating Profile...": "پڕۆفایلەکە دروست دەکرێت...", // From SignUpPage
-      "Registration successful! Please check your email to verify your account.": "تۆمارکردن سەرکەوتوو بوو! تکایە ئیمەیڵەکەت بپشکنە بۆ پشتڕاستکردنەوەی هەژمارەکەت.", // From SignUpPage
-      "Registration successful, but failed to save profile details. Please update your profile later.": "تۆمارکردن سەرکەوتوو بوو، بەڵام پاشەکەوتکردنی زانیارییەکانی پڕۆفایلەکە شکستی هێنا. تکایە دواتر پڕۆفایلەکەت نوێ بکەرەوە.", // From SignUpPage
-      "An unexpected error occurred. Please try again.": "هەڵەیەکی چاوەڕواننەکراو ڕوویدا. تکایە دووبارە هەوڵ بدە.", // From SignUpPage
-      "Please enter both email and password.": "تکایە هەردوو ئیمەیڵ و وشەی نهێنی بنووسە.", // From SignUpPage
-      "You must agree to the terms and conditions.": "دەبێت ڕازی بیت بە مەرج و ڕێساکان.", // From SignUpPage
-      "Please choose whether you want to hire or find a job.": "تکایە هەڵبژێرە ئایا دەتەوێت خەڵک دامەزرێنیت یان کار بدۆزیتەوە.", // From SignUpPage
-      // Add more Kurdish translations here
+      "Email": "ئیمەیڵ",
+
+      "Sign Up": "تۆمارکردن",
+      "Step {{currentStep}} of 4": "هەنگاوی {{currentStep}} لە 4",
+      "Email Address": "ناونیشانی ئیمەیڵ",
+      "Password": "وشەی نهێنی",
+      "Enter your email": "ئیمەیڵەکەت بنووسە",
+      "Create a password": "وشەی نهێنی دروست بکە",
+      "Terms and Conditions": "مەرج و ڕێساکان",
+      "I agree to the": "من ڕازیم بە",
+      "Choose Your Path": "ڕێگاکەت هەڵبژێرە",
+      "I want to Hire People": "دەمەوێت خەڵک دامەزرێنم",
+      "I want to Find a Job": "دەمەوێت کار بدۆزمەوە",
+      "Complete Registration": "تۆمارکردنی تەواو",
+      "Click \"Complete Registration\" to create your account.": "کلیک لە \"تۆمارکردنی تەواو\" بکە بۆ دروستکردنی هەژمارەکەت.",
+      "You will receive an email to verify your address before you can log in and complete your profile.": "ئیمەیڵێکت بۆ دێت بۆ پشتڕاستکردنەوەی ناونیشانەکەت پێش ئەوەی بچیتە ژوورەوە و پڕۆفایلەکەت تەواو بکەیت.",
+      "Next": "دواتر",
+      "Back": "پێشتر",
+      "Registering...": "لە حاڵی تۆمارکردندایە...",
+      "Already have an account?": "پێشتر هەژمارت هەیە؟",
+
+
+      "Loading profile...": "لە حاڵی بارکردنی پڕۆفایلدایە...",
+      "Failed to load profile data.": "شکستی هێنا لە بارکردنی زانیارییەکانی پڕۆفایل.",
+      "Profile already complete. Redirecting...": "پڕۆفایلەکە پێشتر تەواو کراوە. لە حاڵی ڕەوانەکردندایە...",
+      "Complete Your Profile ({{userType}})": "تەواوکردنی پڕۆفایلەکەت ({{userType}})",
+      "Hiring": "بۆ دامەزراندن",
+      "Working": "بۆ کارکردن",
+      "Select Type": "جۆر هەڵبژێرە",
+      "What do you want to do?": "دەتەوێت چی بکەیت؟",
+      "Full Name": "ناوی تەواو",
+      "Nationality": "ڕەگەزنامە",
+      "Age": "تەمەن",
+      "Gender": "ڕەگەز",
+      "Phone Number": "ژمارەی تەلەفۆن",
+      "Known Languages (comma-separated)": "زمانە ناسراوەکان (بە پاوەن جیاکراوەتەوە)",
+      "e.g., English, Spanish, French": "بۆ نموونە: ئینگلیزی، ئیسپانی، فەڕەنسی",
+      "Talent/Skills (comma-separated)": "بەهرە/تواناکان (بە پاوەن جیاکراوەتەوە)",
+      "e.g., Web Development, Graphic Design, Writing": "بۆ نموونە: پەرەپێدانی وێب، دیزاینی گرافیک، نووسین",
+      "Job Experience": "ئەزموونی کار",
+      "Tell us about your work experience...": "باس لە ئەزموونی کارەکەت بکە...",
+      "Save Profile": "پاشەکەوتکردنی پڕۆفایل",
+      "Saving Profile...": "لە حاڵی پاشەکەوتکردنی پڕۆفایلدایە...",
+      "User not authenticated.": "بەکارهێنەر ناسێنراو نییە.",
+      "Please fill out all required profile fields.": "تکایە هەموو خانەکانی پڕۆفایلە داواکراوەکان پڕ بکەرەوە.",
+      "Please fill out all required job seeker profile fields.": "تکایە هەموو خانەکانی پڕۆفایلە داواکراوەکان بۆ گەڕانی کار پڕ بکەرەوە.",
+      "User type is missing. Please select your user type.": "جۆری بەکارهێنەر دیار نییە. تکایە جۆری بەکارهێنەرەکەت هەڵبژێرە.",
+      "Profile created successfully!": "پڕۆفایل بە سەرکەوتوویی دروست کرا!",
+
+      "Log In": "چوونە ژوورەوە",
+      "Enter your email": "ئیمەیڵەکەت بنووسە",
+      "Enter your password": "وشەی نهێنییەکەت بنووسە",
+      "Logging In...": "لە حاڵی چوونە ژوورەوەدایە...",
+      "An error occurred while checking your profile.": "هەڵەیەک ڕوویدا لەکاتی پشکنینی پڕۆفایلەکەت.",
+      "Failed to log out.": "شکستی هێنا لە چوونە دەرەوە.",
+      "An error occurred after login. Please try again.": "هەڵەیەک ڕوویدا دوای چوونە ژوورەوە. تکایە دووبارە هەوڵ بدە.",
+      "Sign in failed. Please check your credentials.": "چوونە ژوورەوە شکستی هێنا. تکایە زانیارییەکانت بپشکنە.",
+      "Don't have an account?": "هەژمارت نییە؟",
+
+      "Loading dashboard...": "لە حاڵی بارکردنی داشبۆرددایە...",
+      "Welcome, {{name}}!": "بەخێربێیت، {{name}}!",
+      "User": "بەکارهێنەر",
+      "Logout": "چوونە دەرەوە",
+      "Updates & Contact": "نوێکارییەکان و پەیوەندی",
+      "Thanks for registering! Our platform is currently under development, with exciting features coming soon.": "سوپاس بۆ تۆمارکردنت! پلاتفۆرمەکەمان لە ئێستادا لە حاڵی پەرەپێداندایە، لەگەڵ تایبەتمەندیی سەرنجڕاکێش کە بەم زووانە دێن.",
+      "We will contact you via your provided phone number for any relevant job opportunities (if you are a job seeker).": "پەیوەندیت پێوە دەکەین لە ڕێگەی ژمارەی تەلەفۆنەکەتەوە بۆ هەر هەلێکی کار کە پەیوەندیدار بێت (ئەگەر گەڕانی کار بیت).",
+      "If you are looking to hire people manually or have immediate inquiries, please feel free to contact us directly.": "ئەگەر بەدوای دامەزراندنی کەسێکدا دەگەڕێیت بە شێوەی دەستی یان پرسیاری بە پەلەت هەیە، تکایە پەیوەندی ڕاستەوخۆمان پێوە بکە.",
+      "Contact Info": "زانیاری پەیوەندی",
+      "Help Us Improve": "یارمەتیمان بدە باشتر بین",
+      "Please take a moment to provide us with valuable feedback by filling out this short form:": "تکایە کەمێک کات تەرخان بکە بۆ پێدانی سەرنجی بەنرخ بە پڕکردنەوەی ئەم فۆڕمە کورتە:",
+      "Fill Out Form": "فۆڕمەکە پڕ بکەرەوە",
+      "Your Profile Information": "زانیارییەکانی پڕۆفایلەکەت",
+      "User Type": "جۆری بەکارهێنەر",
+      "Full Name": "ناوی تەواو",
+      "Nationality": "ڕەگەزنامە",
+      "Age": "تەمەن",
+      "Gender": "ڕەگەز",
+      "Phone Number": "ژمارەی تەلەفۆن",
+      "Known Languages": "زمانە ناسراوەکان",
+      "Talent/Skills": "بەهرە/تواناکان",
+      "Job Experience": "ئەزموونی کار",
+      "N/A": "بەردەست نییە",
+      "Profile data not available.": "زانیارییەکانی پڕۆفایل بەردەست نییە.",
+      "Edit Profile": "دەستکاریکردنی پڕۆفایل",
+
+      "Invalid login credentials": "زانیاری چوونە ژوورەوە هەڵەیە",
+      "Email not confirmed": "ئیمەیڵ پشتڕاست نەکراوەتەوە",
+      "User already registered": "بەکارهێنەر پێشتر تۆمار کراوە",
     }
   }
 };
