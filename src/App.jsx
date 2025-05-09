@@ -5,6 +5,7 @@ import SignUpPage from './pages/SignUpPage';
 import CompleteProfilePage from './pages/CompleteProfilePage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
+import EditProfilePage from './pages/EditProfilePage';
 // Import other pages as you create them (e.g., SignUpPage)
 
 function App() {
@@ -16,11 +17,7 @@ function App() {
         <Route path="/complete-profile" element={<CompleteProfilePage />} />
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
-          {/* Add other routes here as you build your app */}
-          {/* <Route path="/auth/login" element={<LoginPage />} /> */}
-          {/* <Route path="/about" element={<AboutPage />} /> */}
-          {/* <Route path="/contact" element={<ContactPage />} /> */}
-          {/* <Route path="/check-email" element={<CheckEmailPage />} /> */}
+        <Route path="/edit-profile" element={<EditProfilePage />} />
       </Routes>
     </Router>
   );

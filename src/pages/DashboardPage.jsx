@@ -156,7 +156,6 @@ function DashboardPage() {
           <p className="text-gray-700">
             {t('If you are looking to hire people manually or have immediate inquiries, please feel free to contact us directly.')} {/* Translate paragraph */}
             <br/>
-            {/* TODO: Add actual contact information here */}
             {t('Contact Info')}: <span className="font-semibold text-[#60a09b]"> [Your Contact Email/Phone]</span> {/* Translate label */}
           </p>
         </div>
@@ -172,7 +171,7 @@ function DashboardPage() {
                      href="https://docs.google.com/forms/d/e/1FAIpQLSc4SdJIxfO1BaohiVdMRwTRyBWGZHHg570Zhn-IgLkDl5FIwg/viewform" // TODO: Replace with your actual Google Form link
                      target="_blank" // Open in a new tab
                      rel="noopener noreferrer" // Recommended for security when using target="_blank"
-                     className="inline-block py-3 px-8 border border-transparent rounded-full shadow-sm text-lg font-bold text-white bg-[#C3B1E1] hover:bg-[#70b0ab] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#60a09b] transition duration-200 ease-in-out"
+                     className="inline-block py-3 px-8 border border-transparent rounded-md shadow-sm text-lg font-bold text-white bg-[#C3B1E1] hover:bg-[#70b0ab] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#60a09b] transition duration-200 ease-in-out"
                  >
                      {t('Fill Out Form')} {/* Translate button text */}
                  </a>
@@ -181,7 +180,19 @@ function DashboardPage() {
 
 
         {/* Section 3: Profile Information */}
-         <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-[#FFDEAD]">
+         {/* Added relative positioning to this container to position the edit link absolutely */}
+         <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-[#FFDEAD] relative"> {/* Added relative */}
+             {/* Edit Profile Link - Positioned absolutely in the top right */}
+             {/* Styled as simple text with underline and pastel pink color */}
+             {profile && ( // Only show the edit link if the profile is loaded
+                 <a
+                     onClick={() => navigate('/edit-profile')} // Navigate to the edit profile page
+                     className="absolute top-4 right-6 text-[#F67280] hover:text-[#E06070] underline font-semibold text-sm cursor-pointer" // Added absolute positioning and styling
+                 >
+                     {t('Edit Profile')} {/* Translate link text */}
+                 </a>
+             )}
+
              <h2 className="text-2xl font-semibold text-[#60a09b] mb-4">{t('Your Profile Information')}</h2> {/* Translate title */}
              {profile ? (
                  <div className="text-gray-700 space-y-2">
@@ -202,18 +213,11 @@ function DashboardPage() {
                          </>
                      )}
 
-                     {/* TODO: Add Edit Profile Button */}
-                     {/* <div className="mt-4">
-                          <button
-                              onClick={() => navigate('/edit-profile')} // TODO: Create an edit profile page
-                              className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D]"
-                          >
-                              {t('Edit Profile')} // Translate button text
-                          </button>
-                     </div> */}
+                     {/* Removed the old Edit Profile Button div */}
+
                  </div>
              ) : (
-                 <p className="text-gray-700">{t('Profile data not available.')}</p> 
+                 <p className="text-gray-700">{t('Profile data not available.')}</p>
              )}
          </div>
 

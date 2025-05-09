@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 
 // --- Translation Resources ---
 // This is where you'll store your translations for each language.
-// Added all the strings used with t() in the components so far.
+// Added all the strings used with t() in the components so far, including EditProfilePage.
 const resources = {
   en: { // English translations
     translation: { // 'translation' is the default namespace
@@ -18,20 +18,24 @@ const resources = {
       "Arabic": "Arabic", // For flag title
       "Kurdish": "Kurdish", // For flag title
       "English": "English", // For flag title
+      "Arabic Flag": "Arabic Flag", // For flag alt text
+      "Kurdish Flag": "Kurdish Flag", // For flag alt text
+      "English Flag": "English Flag", // For flag alt text
+
 
       // From HeroSection.jsx
       "Where Talent Meets Opportunity.": "Where Talent Meets Opportunity.",
       "Find your next freelance opportunity or the perfect freelancer for your project. Jobsy connects talent and employers faster than ever.": "Find your next freelance opportunity or the perfect freelancer for your project. Jobsy connects talent and employers faster than ever.",
       "Learn More": "Learn More",
       "Jobsy Hero Image": "Jobsy Hero Image", // Example alt text translation
-
-      // From WhyJobsySection.jsx
-      "Post Jobs Instantly": "Post Jobs Instantly",
-      "Easily post jobs and get visibility in seconds. Connect with talent quickly!": "Easily post jobs and get visibility in seconds. Connect with talent quickly!",
-      "Smart Matching": "Smart Matching",
-      "Jobsy connects you with the right candidates using intelligent algorithms.": "Jobsy connects you with the right candidates using intelligent algorithms.",
-      "Real-Time Communication": "Real-Time Communication",
-      "Chat directly with applicants or clients within the platform.": "Chat directly with applicants or clients within the platform.",
+      "Find your next freelance opportunity or the perfect freelancer for your project.": "Find your next freelance opportunity or the perfect freelancer for your project.",
+      "Jobsy connects talent and employers faster than ever. Post jobs or find your dream role with ease.": "Jobsy connects talent and employers faster than ever. Post jobs or find your dream role with ease.",
+      "Globally Fast": "Globally Fast",
+      "Unmatched speeds and low latency worldwide.": "Unmatched speeds and low latency worldwide.",
+      "Natively Intelligent": "Natively Intelligent",
+      "Built-in intelligence that handles unwanted calls and admin.": "Built-in intelligence that handles unwanted calls and admin.",
+      "Always Connected": "Always Connected",
+      "Uninterrupted coverage from joint cellular and satellite network.": "Uninterrupted coverage from joint cellular and satellite network.",
 
 
       // From WorkThatFeelsFunSection.jsx
@@ -76,6 +80,9 @@ const resources = {
       "Back": "Back",
       "Registering...": "Registering...", // Submit button loading text
       "Already have an account?": "Already have an account?",
+      "Please enter a valid email address.": "Please enter a valid email address.", // Validation error
+      "Password must be at least 6 characters long.": "Password must be at least 6 characters long.", // Validation error
+
 
       // From CompleteProfilePage.jsx (Profile Setup)
       "Loading profile...": "Loading profile...", // Loading text
@@ -105,6 +112,7 @@ const resources = {
       "User type is missing. Please select your user type.": "User type is missing. Please select your user type.", // Error message
       "Profile created successfully!": "Profile created successfully!", // Success message
 
+
       // From LoginPage.jsx
       "Log In": "Log In", // Page title and button text
       "Enter your email": "Enter your email", // Placeholder
@@ -115,6 +123,7 @@ const resources = {
       "An error occurred after login. Please try again.": "An error occurred after login. Please try again.", // Error message
       "Sign in failed. Please check your credentials.": "Sign in failed. Please check your credentials.", // Error message
       "Don't have an account?": "Don't have an account?", // Text before link
+
 
       // From DashboardPage.jsx
       "Loading dashboard...": "Loading dashboard...", // Loading text
@@ -141,7 +150,17 @@ const resources = {
       "Job Experience": "Job Experience", // Profile label
       "N/A": "N/A", // Display text for missing data
       "Profile data not available.": "Profile data not available.", // Message when profile fetch fails
-      "Edit Profile": "Edit Profile", // Button text (commented out in code)
+      "Edit Profile": "Edit Profile", // Button text
+
+      // From EditProfilePage.jsx (New strings)
+      "Loading profile for editing...": "Loading profile for editing...", // Loading text
+      "Failed to load profile data for editing.": "Failed to load profile data for editing.", // Error message
+      "Profile not found.": "Profile not found.", // Error message
+      "Edit Your Profile": "Edit Your Profile", // Page title
+      "Save Changes": "Save Changes", // Submit button text
+      "An unexpected error occurred during profile update. Please try again.": "An unexpected error occurred during profile update. Please try again.", // Error message
+      "Profile updated successfully!": "Profile updated successfully!", // Success message
+
 
       // Common Supabase Auth/Database Error Messages (Translate these for better user experience)
       "Invalid login credentials": "Invalid login credentials",
@@ -162,18 +181,23 @@ const resources = {
       "Arabic": "العربية",
       "Kurdish": "الكردية",
       "English": "الإنجليزية",
+      "Arabic Flag": "علم العربية",
+      "Kurdish Flag": "علم الكردية",
+      "English Flag": "علم الإنجليزية",
 
       "Where Talent Meets Opportunity.": "حيث تلتقي المواهب بالفرص.",
       "Find your next freelance opportunity or the perfect freelancer for your project. Jobsy connects talent and employers faster than ever.": "ابحث عن فرصتك المستقلة التالية أو عن المستقل المثالي لمشروعك. جوبسي يربط بين المواهب وأصحاب العمل أسرع من أي وقت مضى.",
       "Learn More": "تعلم المزيد",
       "Jobsy Hero Image": "صورة بطل جوبسي",
+      "Find your next freelance opportunity or the perfect freelancer for your project.": "ابحث عن فرصتك المستقلة التالية أو عن المستقل المثالي لمشروعك.",
+      "Jobsy connects talent and employers faster than ever. Post jobs or find your dream role with ease.": "جوبسي يربط بين المواهب وأصحاب العمل أسرع من أي وقت مضى. انشر الوظائف أو ابحث عن دور أحلامك بسهولة.",
+      "Globally Fast": "سريع عالمياً",
+      "Unmatched speeds and low latency worldwide.": "سرعات لا مثيل لها وزمن استجابة منخفض في جميع أنحاء العالم.",
+      "Natively Intelligent": "ذكي بطبيعته",
+      "Built-in intelligence that handles unwanted calls and admin.": "ذكاء مدمج يتعامل مع المكالمات غير المرغوب فيها والإدارة.",
+      "Always Connected": "متصل دائماً",
+      "Uninterrupted coverage from joint cellular and satellite network.": "تغطية غير منقطعة من شبكة خلوية وقمر صناعي مشتركة.",
 
-      "Post Jobs Instantly": "انشر الوظائف فوراً",
-      "Easily post jobs and get visibility in seconds. Connect with talent quickly!": "انشر الوظائف بسهولة واحصل على رؤية في ثوانٍ. تواصل مع المواهب بسرعة!",
-      "Smart Matching": "مطابقة ذكية",
-      "Jobsy connects you with the right candidates using intelligent algorithms.": "جوبسي يربطك بالمرشحين المناسبين باستخدام خوارزميات ذكية.",
-      "Real-Time Communication": "تواصل فوري",
-      "Chat directly with applicants or clients within the platform.": "تحدث مباشرة مع المتقدمين أو العملاء داخل المنصة.",
 
       "Work that feels fun": "عمل ممتع",
       "Explore a colorful world of job opportunities across various fields.": "استكشف عالمًا ملونًا من فرص العمل في مختلف المجالات.",
@@ -212,7 +236,8 @@ const resources = {
       "Back": "السابق",
       "Registering...": "جاري التسجيل...",
       "Already have an account?": "هل لديك حساب بالفعل؟",
-
+      "Please enter a valid email address.": "الرجاء إدخال عنوان بريد إلكتروني صالح.",
+      "Password must be at least 6 characters long.": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.",
 
       "Loading profile...": "جاري تحميل الملف الشخصي...",
       "Failed to load profile data.": "فشل تحميل بيانات الملف الشخصي.",
@@ -277,6 +302,15 @@ const resources = {
       "Profile data not available.": "بيانات الملف الشخصي غير متوفرة.",
       "Edit Profile": "تعديل الملف الشخصي",
 
+      "Loading profile for editing...": "جاري تحميل الملف الشخصي للتعديل...",
+      "Failed to load profile data for editing.": "فشل تحميل بيانات الملف الشخصي للتعديل.",
+      "Profile not found.": "الملف الشخصي غير موجود.",
+      "Edit Your Profile": "تعديل ملفك الشخصي",
+      "Save Changes": "حفظ التغييرات",
+      "An unexpected error occurred during profile update. Please try again.": "حدث خطأ غير متوقع أثناء تحديث الملف الشخصي. الرجاء المحاولة مرة أخرى.",
+      "Profile updated successfully!": "تم تحديث الملف الشخصي بنجاح!",
+
+
       "Invalid login credentials": "بيانات تسجيل الدخول غير صالحة",
       "Email not confirmed": "البريد الإلكتروني غير مؤكد",
       "User already registered": "المستخدم مسجل بالفعل",
@@ -294,18 +328,23 @@ const resources = {
       "Arabic": "عەرەبی",
       "Kurdish": "کوردی",
       "English": "ئینگلیزی",
+      "Arabic Flag": "ئاڵای عەرەبی",
+      "Kurdish Flag": "ئاڵای کوردی",
+      "English Flag": "ئاڵای ئینگلیزی",
 
       "Where Talent Meets Opportunity.": "شوێنێک کە بەهرە و دەرفەت بەیەک دەگەن.",
       "Find your next freelance opportunity or the perfect freelancer for your project. Jobsy connects talent and employers faster than ever.": "دەرفەتی کاری سەربەخۆی داهاتووت یان سەربەخۆی گونجاو بۆ پڕۆژەکەت بدۆزەرەوە. جۆبسی بەهرەمەندەکان و خاوەنکارەکان زووتر لە جاران پێکەوە دەبەستێتەوە.",
       "Learn More": "زیاتر بزانە",
       "Jobsy Hero Image": "وێنەی پاڵەوانی جۆبسی",
+      "Find your next freelance opportunity or the perfect freelancer for your project.": "دەرفەتی کاری سەربەخۆی داهاتووت یان سەربەخۆی گونجاو بۆ پڕۆژەکەت بدۆزەرەوە.",
+      "Jobsy connects talent and employers faster than ever. Post jobs or find your dream role with ease.": "جۆبسی بەهرەمەندەکان و خاوەنکارەکان زووتر لە جاران پێکەوە دەبەستێتەوە. کار بڵاو بکەرەوە یان ڕۆڵی خەونەکانت بە ئاسانی بدۆزەرەوە.",
+      "Globally Fast": "خێرا لە جیهاندا",
+      "Unmatched speeds and low latency worldwide.": "خێرایی بێ وێنە و کەمترین دواکەوتن لە سەرانسەری جیهاندا.",
+      "Natively Intelligent": "زیرەک بە بنەڕەت",
+      "Built-in intelligence that handles unwanted calls and admin.": "زیرەکی ناوەکی کە پەیوەندییە نەویستراوەکان و کارگێڕی بەڕێوە دەبات.",
+      "Always Connected": "هەمیشە بەستراوەتەوە",
+      "Uninterrupted coverage from joint cellular and satellite network.": "داپۆشینی بێ پچڕان لە تۆڕی خانەیی و مانگی دەستکردی هاوبەشەوە.",
 
-      "Post Jobs Instantly": "ڕاستەوخۆ کار بڵاو بکەرەوە",
-      "Easily post jobs and get visibility in seconds. Connect with talent quickly!": "بە ئاسانی کار بڵاو بکەرەوە و لە چەند چرکەیەکدا ببینرێ. خێرا پەیوەندی بە بەهرەمەندەکانەوە بکە!",
-      "Smart Matching": "هاوتاکردنی زیرەک",
-      "Jobsy connects you with the right candidates using intelligent algorithms.": "جۆبسی تۆ بە بەربژێرە گونجاوەکانەوە دەبەستێتەوە بە بەکارهێنانی ئەلگۆریتمی زیرەک.",
-      "Real-Time Communication": "پەیوەندی ڕاستەوخۆ",
-      "Chat directly with applicants or clients within the platform.": "ڕاستەوخۆ لەناو پلاتفۆرمەکەدا لەگەڵ داواکاران یان کڕیاران قسە بکە.",
 
       "Work that feels fun": "کارێک کە هەستی خۆشی پێبکەیت",
       "Explore a colorful world of job opportunities across various fields.": "جیهانێکی ڕەنگاوڕەنگی هەلی کار لە بوارە جیاوازەکاندا بگەڕێ.",
@@ -344,7 +383,8 @@ const resources = {
       "Back": "پێشتر",
       "Registering...": "لە حاڵی تۆمارکردندایە...",
       "Already have an account?": "پێشتر هەژمارت هەیە؟",
-
+      "Please enter a valid email address.": "تکایە ناونیشانی ئیمەیڵێکی دروست بنووسە.",
+      "Password must be at least 6 characters long.": "وشەی نهێنی دەبێت لانیکەم 6 پیت بێت.",
 
       "Loading profile...": "لە حاڵی بارکردنی پڕۆفایلدایە...",
       "Failed to load profile data.": "شکستی هێنا لە بارکردنی زانیارییەکانی پڕۆفایل.",
@@ -408,6 +448,15 @@ const resources = {
       "N/A": "بەردەست نییە",
       "Profile data not available.": "زانیارییەکانی پڕۆفایل بەردەست نییە.",
       "Edit Profile": "دەستکاریکردنی پڕۆفایل",
+
+      "Loading profile for editing...": "لە حاڵی بارکردنی پڕۆفایل بۆ دەستکاریکردن...",
+      "Failed to load profile data for editing.": "شکستی هێنا لە بارکردنی زانیارییەکانی پڕۆفایل بۆ دەستکاریکردن.",
+      "Profile not found.": "پڕۆفایل نەدۆزرایەوە.",
+      "Edit Your Profile": "دەستکاریکردنی پڕۆفایلەکەت",
+      "Save Changes": "پاشەکەوتکردنی گۆڕانکارییەکان",
+      "An unexpected error occurred during profile update. Please try again.": "هەڵەیەکی چاوەڕواننەکراو ڕوویدا لەکاتی نوێکردنەوەی پڕۆفایل. تکایە دووبارە هەوڵ بدە.",
+      "Profile updated successfully!": "پڕۆفایل بە سەرکەوتوویی نوێ کرایەوە!",
+
 
       "Invalid login credentials": "زانیاری چوونە ژوورەوە هەڵەیە",
       "Email not confirmed": "ئیمەیڵ پشتڕاست نەکراوەتەوە",
