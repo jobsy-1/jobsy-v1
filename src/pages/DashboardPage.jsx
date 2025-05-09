@@ -169,10 +169,10 @@ function DashboardPage() {
              </p>
              <div className="text-center">
                  <a
-                     href="YOUR_GOOGLE_FORM_LINK" // TODO: Replace with your actual Google Form link
+                     href="https://docs.google.com/forms/d/e/1FAIpQLSc4SdJIxfO1BaohiVdMRwTRyBWGZHHg570Zhn-IgLkDl5FIwg/viewform" // TODO: Replace with your actual Google Form link
                      target="_blank" // Open in a new tab
                      rel="noopener noreferrer" // Recommended for security when using target="_blank"
-                     className="inline-block py-3 px-8 border border-transparent rounded-full shadow-sm text-lg font-bold text-[#100030] bg-[#C3B1E1] hover:bg-[#70b0ab] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#60a09b] transition duration-200 ease-in-out"
+                     className="inline-block py-3 px-8 border border-transparent rounded-full shadow-sm text-lg font-bold text-white bg-[#C3B1E1] hover:bg-[#70b0ab] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#60a09b] transition duration-200 ease-in-out"
                  >
                      {t('Fill Out Form')} {/* Translate button text */}
                  </a>
