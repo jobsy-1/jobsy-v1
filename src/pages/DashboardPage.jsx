@@ -1,9 +1,13 @@
+// src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient'; // Assuming you have supabaseClient.js set up
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 
 function DashboardPage() {
   const navigate = useNavigate();
+  // Call the hook to get the translation function 't'
+  const { t } = useTranslation();
 
   // State to hold user and profile data
   const [user, setUser] = useState(null);
@@ -40,7 +44,7 @@ function DashboardPage() {
 
       if (fetchProfileError && fetchProfileError.code !== 'PGRST116') { // PGRST116 means 'no rows found'
         console.error('Error fetching profile:', fetchProfileError);
-        setError('Failed to load profile data.');
+        setError(t('Failed to load profile data.')); // Translate error message
         setLoading(false);
         // Decide how to handle this - maybe redirect to complete profile page?
         // navigate('/complete-profile'); // Optional: Redirect if profile fetch fails unexpectedly
@@ -73,7 +77,8 @@ function DashboardPage() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]); // Rerun effect if navigate changes
+  }, [navigate, t]); // Added t to dependency array as it's used for error messages
+
 
   // --- Handler for Logout ---
   const handleLogout = async () => {
@@ -82,7 +87,7 @@ function DashboardPage() {
 
     if (error) {
       console.error('Error logging out:', error);
-      setError('Failed to log out.');
+      setError(t('Failed to log out.')); // Translate error message
       setLoading(false);
     } else {
       // Redirect to login page after successful logout
@@ -97,7 +102,7 @@ function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#fefef2] flex items-center justify-center">
-        <p className="text-xl font-semibold text-[#355C7D]">Loading dashboard...</p>
+        <p className="text-xl font-semibold text-[#355C7D]">{t('Loading dashboard...')}</p> {/* Translate loading text */}
       </div>
     );
   }
@@ -107,12 +112,12 @@ function DashboardPage() {
       return (
           <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
               <div className="w-full max-w-md text-center text-red-600">
-                  <p>{error}</p>
+                  <p>{error}</p> {/* Error message is already translated */}
                   <button
                       onClick={handleLogout}
                       className="mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   >
-                      Logout
+                      {t('Logout')} {/* Translate button text */}
                   </button>
               </div>
           </div>
@@ -127,39 +132,40 @@ function DashboardPage() {
         {/* Header with Welcome and Logout */}
         <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-[#355C7D]">
-               Welcome, {profile?.full_name || 'User'}!
+               {/* Translate welcome message with interpolation for name */}
+               {t('Welcome, {{name}}!', { name: profile?.full_name || t('User') })}
             </h1>
              <button
                  onClick={handleLogout}
                  className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#C06C84] hover:bg-[#D07C94] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#C06C84]"
              >
-                 Logout
+                 {t('Logout')} {/* Translate button text */}
              </button>
         </div>
 
 
         {/* Section 1: Welcome / Coming Soon */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-[#F8B195]">
-          <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">Updates & Contact</h2>
+          <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">{t('Updates & Contact')}</h2> {/* Translate title */}
           <p className="text-gray-700 mb-4">
-            Thanks for registering! Our platform is currently under development, with exciting features coming soon.
+            {t('Thanks for registering! Our platform is currently under development, with exciting features coming soon.')} {/* Translate paragraph */}
           </p>
            <p className="text-gray-700 mb-4">
-               We will contact you via your provided phone number for any relevant job opportunities (if you are a job seeker).
+               {t('We will contact you via your provided phone number for any relevant job opportunities (if you are a job seeker).')} {/* Translate paragraph */}
            </p>
           <p className="text-gray-700">
-            If you are looking to hire people manually or have immediate inquiries, please feel free to contact us directly.
+            {t('If you are looking to hire people manually or have immediate inquiries, please feel free to contact us directly.')} {/* Translate paragraph */}
             <br/>
             {/* TODO: Add actual contact information here */}
-            Contact Info: <span className="font-semibold text-[#60a09b]"> [Your Contact Email/Phone]</span>
+            {t('Contact Info')}: <span className="font-semibold text-[#60a09b]"> [Your Contact Email/Phone]</span> {/* Translate label */}
           </p>
         </div>
 
         {/* Section 2: Google Form Link */}
          <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-[#A8E6CE]">
-             <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">Help Us Improve</h2>
+             <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">{t('Help Us Improve')}</h2> {/* Translate title */}
              <p className="text-gray-700 mb-4">
-                 Please take a moment to provide us with valuable feedback by filling out this short form:
+                 {t('Please take a moment to provide us with valuable feedback by filling out this short form:')} {/* Translate paragraph */}
              </p>
              <div className="text-center">
                  <a
@@ -168,7 +174,7 @@ function DashboardPage() {
                      rel="noopener noreferrer" // Recommended for security when using target="_blank"
                      className="inline-block py-3 px-8 border border-transparent rounded-md shadow-sm text-lg font-bold text-white bg-[#60a09b] hover:bg-[#70b0ab] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#60a09b] transition duration-200 ease-in-out"
                  >
-                     Fill Out Form
+                     {t('Fill Out Form')} {/* Translate button text */}
                  </a>
              </div>
          </div>
@@ -176,22 +182,23 @@ function DashboardPage() {
 
         {/* Section 3: Profile Information */}
          <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-[#FFDEAD]">
-             <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">Your Profile Information</h2>
+             <h2 className="text-2xl font-semibold text-[#355C7D] mb-4">{t('Your Profile Information')}</h2> {/* Translate title */}
              {profile ? (
                  <div className="text-gray-700 space-y-2">
-                     <p><span className="font-semibold">User Type:</span> {profile.user_type}</p>
-                     <p><span className="font-semibold">Full Name:</span> {profile.full_name}</p>
-                     <p><span className="font-semibold">Nationality:</span> {profile.nationality}</p>
-                     <p><span className="font-semibold">Age:</span> {profile.age}</p>
-                     <p><span className="font-semibold">Gender:</span> {profile.gender}</p>
-                     <p><span className="font-semibold">Phone Number:</span> {profile.phone_number}</p>
+                     {/* Translate labels and potentially values if needed */}
+                     <p><span className="font-semibold">{t('User Type')}:</span> {profile.user_type === 'hire' ? t('Hiring') : t('Working')}</p> {/* Translate user type display */}
+                     <p><span className="font-semibold">{t('Full Name')}:</span> {profile.full_name}</p>
+                     <p><span className="font-semibold">{t('Nationality')}:</span> {profile.nationality}</p>
+                     <p><span className="font-semibold">{t('Age')}:</span> {profile.age}</p>
+                     <p><span className="font-semibold">{t('Gender')}:</span> {profile.gender}</p>
+                     <p><span className="font-semibold">{t('Phone Number')}:</span> {profile.phone_number}</p>
 
                      {/* Display these fields only if userType is 'work' */}
                      {profile.user_type === 'work' && (
                          <>
-                             <p><span className="font-semibold">Known Languages:</span> {profile.known_languages?.join(', ') || 'N/A'}</p> {/* Join array for display */}
-                             <p><span className="font-semibold">Talent/Skills:</span> {profile.talent_skills?.join(', ') || 'N/A'}</p> {/* Join array for display */}
-                             <p><span className="font-semibold">Job Experience:</span> {profile.job_experience || 'N/A'}</p>
+                             <p><span className="font-semibold">{t('Known Languages')}:</span> {profile.known_languages?.join(', ') || t('N/A')}</p> {/* Translate label and N/A */}
+                             <p><span className="font-semibold">{t('Talent/Skills')}:</span> {profile.talent_skills?.join(', ') || t('N/A')}</p> {/* Translate label and N/A */}
+                             <p><span className="font-semibold">{t('Job Experience')}:</span> {profile.job_experience || t('N/A')}</p> {/* Translate label and N/A */}
                          </>
                      )}
 
@@ -201,12 +208,12 @@ function DashboardPage() {
                               onClick={() => navigate('/edit-profile')} // TODO: Create an edit profile page
                               className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D]"
                           >
-                              Edit Profile
+                              {t('Edit Profile')} // Translate button text
                           </button>
                      </div> */}
                  </div>
              ) : (
-                 <p className="text-gray-700">Profile data not available.</p>
+                 <p className="text-gray-700">{t('Profile data not available.')}</p> 
              )}
          </div>
 

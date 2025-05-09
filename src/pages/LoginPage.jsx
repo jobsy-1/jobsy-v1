@@ -1,9 +1,13 @@
+// src/pages/LoginPage.jsx
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient'; // Assuming you have supabaseClient.js set up
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 
 function LoginPage() {
   const navigate = useNavigate();
+  // Call the hook to get the translation function 't'
+  const { t } = useTranslation();
 
   // State for form inputs
   const [email, setEmail] = useState('');
@@ -28,15 +32,16 @@ function LoginPage() {
 
         if (profile) {
           // Profile exists, redirect to dashboard
+          console.log('Login successful, profile exists. Redirecting to dashboard.');
           navigate('/dashboard'); // TODO: Replace with your actual dashboard route
         } else if (fetchProfileError && fetchProfileError.code === 'PGRST116') {
           // No profile found, redirect to complete profile page
+          console.log('Login successful, no profile found. Redirecting to complete profile.');
           navigate('/complete-profile'); // Redirect to the complete profile page
         } else if (fetchProfileError) {
             // Handle other potential errors fetching profile
             console.error('Error checking profile existence:', fetchProfileError);
-            // Optionally set an error state or redirect to a generic error page
-            setError('An error occurred while checking your profile.');
+            setError(t('An error occurred while checking your profile.')); // Translate error message
         }
         // If no profile and no specific 'no rows found' error, stay on login page (shouldn't happen with RLS)
       }
@@ -58,7 +63,7 @@ function LoginPage() {
       subscription.unsubscribe();
     };
 
-  }, [navigate]); // Rerun effect if navigate changes
+  }, [navigate, t]); // Added t to dependency array as it's used for error messages
 
 
   // --- Handler for Login Submission ---
@@ -77,7 +82,7 @@ function LoginPage() {
 
       if (signInError) {
         console.error('Supabase Sign In Error:', signInError);
-        setError(signInError.message);
+        setError(t(signInError.message)); // Translate Supabase error message
         setLoading(false);
         return;
       }
@@ -104,7 +109,7 @@ function LoginPage() {
         } else if (fetchProfileError) {
             // Handle other potential errors fetching profile
             console.error('Error checking profile existence after login:', fetchProfileError);
-            setError('An error occurred after login. Please try again.');
+            setError(t('An error occurred after login. Please try again.')); // Translate error message
             setLoading(false);
         }
          // If no profile and no specific 'no rows found' error, stay on login page (shouldn't happen with RLS)
@@ -114,14 +119,14 @@ function LoginPage() {
           // (less common for password sign-in, more for magic links before confirmation)
           // For password sign-in, an error is usually returned if unsuccessful.
           console.warn('Sign in did not return a user object.');
-          setError('Sign in failed. Please check your credentials.'); // Fallback error
+          setError(t('Sign in failed. Please check your credentials.')); // Translate fallback error
           setLoading(false);
       }
 
 
     } catch (error) {
       console.error('Unexpected Error during Login:', error);
-      setError('An unexpected error occurred. Please try again.');
+      setError(t('An unexpected error occurred. Please try again.')); // Translate error message
       setLoading(false);
     }
   };
@@ -131,8 +136,9 @@ function LoginPage() {
   return (
     <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
+        {/* Translate the page title */}
         <h1 className="text-3xl font-bold text-center text-[#355C7D] mb-8">
-          Log In
+          {t('Log In')}
         </h1>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -141,7 +147,7 @@ function LoginPage() {
           <div>
             <label htmlFor="email" className="inline-block mb-2">
               <span className="px-4 py-1 bg-[#F8B195] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                Email Address
+                {t('Email Address')} {/* Translate label */}
               </span>
             </label>
             <input
@@ -150,7 +156,7 @@ function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#A8E6CE] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-              placeholder="Enter your email"
+              placeholder={t('Enter your email')} 
               required
             />
           </div>
@@ -159,7 +165,7 @@ function LoginPage() {
           <div>
             <label htmlFor="password" className="inline-block mb-2">
                <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                Password
+                {t('Password')} {/* Translate label */}
                </span>
             </label>
             <input
@@ -168,7 +174,7 @@ function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-              placeholder="Enter your password"
+              placeholder={t('Enter your password')}
               required
             />
           </div>
@@ -180,14 +186,15 @@ function LoginPage() {
               disabled={loading}
               className={`py-3 px-8 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              {loading ? 'Logging In...' : 'Log In'}
+              {/* Translate button text based on loading state */}
+              {loading ? t('Logging In...') : t('Log In')}
             </button>
           </div>
 
           {/* Error Message */}
           {error && (
             <div className="mt-4 text-center text-red-600">
-              <p>{error}</p>
+              <p>{error}</p> {/* Error message is already translated */}
             </div>
           )}
 
@@ -195,16 +202,16 @@ function LoginPage() {
 
         {/* "Don't have an account?" link */}
         <div className="mt-6 text-center">
-          <span className="text-gray-600">Don't have an account? </span>
-          <Link to="/auth/signup" className="text-[#60a09b] hover:underline font-semibold"> {/* TODO: Replace with your actual signup route */}
-            Sign Up
+          <span className="text-gray-600">{t('Don\'t have an account?')} </span> {/* Translate text */}
+          <Link to="/signup" className="text-[#60a09b] hover:underline font-semibold"> {/* TODO: Replace with your actual signup route */}
+            {t('Sign Up')} {/* Translate link text */}
           </Link>
         </div>
 
          {/* Optional: Forgot password link */}
          {/* <div className="mt-2 text-center">
              <Link to="/auth/forgot-password" className="text-gray-600 hover:underline text-sm">
-                 Forgot Password?
+                 {t('Forgot Password?')} // Translate link text
              </Link>
          </div> */}
 

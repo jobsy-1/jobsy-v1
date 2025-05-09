@@ -1,9 +1,13 @@
+// src/pages/CompleteProfilePage.jsx
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient'; // Assuming you have supabaseClient.js set up
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 
 function CompleteProfilePage() {
   const navigate = useNavigate();
+  // Call the hook to get the translation function 't'
+  const { t } = useTranslation();
 
   // State to hold profile form data
   const [profileData, setProfileData] = useState({
@@ -55,7 +59,7 @@ function CompleteProfilePage() {
 
         if (fetchProfileError && fetchProfileError.code !== 'PGRST116') { // PGRST116 means 'no rows found'
           console.error('Error fetching profile:', fetchProfileError);
-          setError('Failed to load profile data.');
+          setError(t('Failed to load profile data.')); // Translate error message
           setLoading(false);
           return;
         }
@@ -64,7 +68,7 @@ function CompleteProfilePage() {
           // Profile exists, redirect to dashboard or welcome page
           setProfileExists(true);
           setLoading(false);
-          setSuccessMessage('Profile already complete. Redirecting...');
+          setSuccessMessage(t('Profile already complete. Redirecting...')); // Translate success message
           // Redirect after a short delay
           setTimeout(() => {
             navigate('/dashboard'); // TODO: Replace with your actual dashboard route
@@ -110,7 +114,8 @@ function CompleteProfilePage() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]); // Rerun effect if navigate changes
+  }, [navigate, t]); // Added t to dependency array
+
 
   // --- Handler for Form Input Changes ---
   const handleInputChange = (e) => {
@@ -133,21 +138,21 @@ function CompleteProfilePage() {
     event.preventDefault();
 
     if (!user) {
-        setError('User not authenticated.');
+        setError(t('User not authenticated.')); // Translate error message
         return;
     }
 
      // Basic validation for required fields before submission
      if (!profileData.fullName || !profileData.nationality || !profileData.age || !profileData.gender || !profileData.phoneNumber) {
-         setError('Please fill out all required profile fields.');
+         setError(t('Please fill out all required profile fields.')); // Translate error message
          return;
      }
       if (profileData.userType === 'work' && (!profileData.talentSkills || !profileData.jobExperience || !profileData.knownLanguages)) {
-          setError('Please fill out all required job seeker profile fields.');
+          setError(t('Please fill out all required job seeker profile fields.')); // Translate error message
           return;
       }
        if (!profileData.userType) {
-           setError('User type is missing. Please select your user type.');
+           setError(t('User type is missing. Please select your user type.')); // Translate error message
            return;
        }
 
@@ -182,12 +187,12 @@ function CompleteProfilePage() {
 
       if (insertError) {
         console.error('Supabase Profile Insertion Error:', insertError);
-        setError(insertError.message);
+        setError(t(insertError.message)); // Translate error message (Supabase provides messages)
         setSubmitting(false);
         return;
       }
 
-      setSuccessMessage('Profile created successfully!');
+      setSuccessMessage(t('Profile created successfully!')); // Translate success message
       setSubmitting(false);
 
       // Redirect to dashboard after successful profile creation
@@ -197,7 +202,7 @@ function CompleteProfilePage() {
 
     } catch (error) {
       console.error('Unexpected Error during Profile Creation:', error);
-      setError('An unexpected error occurred. Please try again.');
+      setError(t('An unexpected error occurred. Please try again.')); // Translate error message
       setSubmitting(false);
     }
   };
@@ -208,7 +213,7 @@ function CompleteProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#fefef2] flex items-center justify-center">
-        <p className="text-xl font-semibold text-[#355C7D]">Loading profile...</p>
+        <p className="text-xl font-semibold text-[#355C7D]">{t('Loading profile...')}</p> {/* Translate loading text */}
       </div>
     );
   }
@@ -217,7 +222,7 @@ function CompleteProfilePage() {
   if (profileExists) {
        return (
          <div className="min-h-screen bg-[#fefef2] flex items-center justify-center">
-           <p className="text-xl font-semibold text-[#355C7D]">{successMessage}</p>
+           <p className="text-xl font-semibold text-[#355C7D]">{successMessage}</p> {/* successMessage is already translated */}
          </div>
        );
   }
@@ -228,26 +233,28 @@ function CompleteProfilePage() {
     <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-[#355C7D] mb-8">
-          Complete Your Profile ({profileData.userType === 'hire' ? 'Hiring' : profileData.userType === 'work' ? 'Working' : 'Select Type'})
+          {/* Translate title with interpolation */}
+          {t('Complete Your Profile ({{userType}})', { userType: profileData.userType === 'hire' ? t('Hiring') : profileData.userType === 'work' ? t('Working') : t('Select Type') })}
         </h1>
 
          {/* Display user type if already known, or provide selection if not */}
          {!profileData.userType && (
               <div className="flex flex-col space-y-4 mb-6">
-                   <p className="text-center text-gray-700 font-semibold">What do you want to do?</p>
+                   {/* Translate prompt text */}
+                   <p className="text-center text-gray-700 font-semibold">{t('What do you want to do?')}</p>
                   <button
                       type="button"
                       onClick={() => handleUserTypeSelect('hire')}
                       className={`py-3 px-6 rounded-lg text-lg font-semibold transition-colors duration-300 ${profileData.userType === 'hire' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
                   >
-                      I want to Hire People
+                      {t('I want to Hire People')} {/* Translate button text */}
                   </button>
                    <button
                       type="button"
                       onClick={() => handleUserTypeSelect('work')}
                        className={`py-3 px-6 rounded-lg text-lg font-semibold transition-colors duration-300 ${profileData.userType === 'work' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
                   >
-                      I want to Find a Job
+                      {t('I want to Find a Job')} {/* Translate button text */}
                   </button>
               </div>
           )}
@@ -263,7 +270,7 @@ function CompleteProfilePage() {
                    <div>
                        <label htmlFor="fullName" className="inline-block mb-2">
                            <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              Full Name
+                              {t('Full Name')} {/* Translate label */}
                            </span>
                        </label>
                        <input
@@ -273,7 +280,7 @@ function CompleteProfilePage() {
                            value={profileData.fullName}
                            onChange={handleInputChange}
                            className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder="Enter your full name"
+                           placeholder={t('Enter your full name')}
                            required
                        />
                    </div>
@@ -282,7 +289,7 @@ function CompleteProfilePage() {
                    <div>
                        <label htmlFor="nationality" className="inline-block mb-2">
                            <span className="px-4 py-1 bg-[#FFDEAD] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              Nationality
+                              {t('Nationality')} {/* Translate label */}
                            </span>
                        </label>
                        <input
@@ -292,7 +299,7 @@ function CompleteProfilePage() {
                            value={profileData.nationality}
                            onChange={handleInputChange}
                            className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#C06C84] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder="Enter your nationality"
+                           placeholder={t('Enter your nationality')}
                            required
                        />
                    </div>
@@ -301,7 +308,7 @@ function CompleteProfilePage() {
                    <div>
                        <label htmlFor="age" className="inline-block mb-2">
                            <span className="px-4 py-1 bg-[#F8B195] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              Age
+                              {t('Age')} {/* Translate label */}
                            </span>
                        </label>
                        <input
@@ -311,7 +318,7 @@ function CompleteProfilePage() {
                            value={profileData.age}
                            onChange={handleInputChange}
                            className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#A8E6CE] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder="Enter your age"
+                           placeholder={t('Enter your age')} 
                            required
                            min="16"
                            max="120"
@@ -322,7 +329,7 @@ function CompleteProfilePage() {
                    <div>
                        <label htmlFor="gender" className="inline-block mb-2">
                            <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              Gender
+                              {t('Gender')} {/* Translate label */}
                            </span>
                        </label>
                        <input
@@ -332,7 +339,7 @@ function CompleteProfilePage() {
                            value={profileData.gender}
                            onChange={handleInputChange}
                            className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder="Enter your gender"
+                           placeholder={t('Enter your gender')} 
                            required
                        />
                    </div>
@@ -341,7 +348,7 @@ function CompleteProfilePage() {
                    <div>
                        <label htmlFor="phoneNumber" className="inline-block mb-2">
                            <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              Phone Number
+                              {t('Phone Number')} {/* Translate label */}
                            </span>
                        </label>
                        <input
@@ -351,7 +358,7 @@ function CompleteProfilePage() {
                            value={profileData.phoneNumber}
                            onChange={handleInputChange}
                            className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder="Enter your phone number"
+                           placeholder={t('Enter your phone number')}
                            required
                        />
                    </div>
@@ -364,7 +371,7 @@ function CompleteProfilePage() {
                            <div>
                                <label htmlFor="knownLanguages" className="inline-block mb-2">
                                    <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                                      Known Languages (comma-separated)
+                                      {t('Known Languages (comma-separated)')} {/* Translate label */}
                                    </span>
                                </label>
                                <input
@@ -374,7 +381,7 @@ function CompleteProfilePage() {
                                    value={profileData.knownLanguages}
                                    onChange={handleInputChange}
                                    className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                                   placeholder="e.g., English, Spanish, French"
+                                   placeholder={t('e.g., English, Spanish, French')} 
                                    required
                                />
                            </div>
@@ -383,7 +390,7 @@ function CompleteProfilePage() {
                            <div>
                                <label htmlFor="talentSkills" className="inline-block mb-2">
                                    <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                                      Talent/Skills (comma-separated)
+                                      {t('Talent/Skills (comma-separated)')} {/* Translate label */}
                                    </span>
                                </label>
                                <input
@@ -393,7 +400,7 @@ function CompleteProfilePage() {
                                    value={profileData.talentSkills}
                                    onChange={handleInputChange}
                                    className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                                   placeholder="e.g., Web Development, Graphic Design, Writing"
+                                   placeholder={t('e.g., Web Development, Graphic Design, Writing')}
                                    required
                                />
                            </div>
@@ -402,7 +409,7 @@ function CompleteProfilePage() {
                            <div>
                                <label htmlFor="jobExperience" className="inline-block mb-2">
                                     <span className="px-4 py-1 bg-[#FFDEAD] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                                       Job Experience
+                                       {t('Job Experience')} {/* Translate label */}
                                     </span>
                                </label>
                                <textarea
@@ -412,7 +419,7 @@ function CompleteProfilePage() {
                                    onChange={handleInputChange}
                                    rows="4"
                                    className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#C06C84] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight resize-y bg-transparent"
-                                   placeholder="Tell us about your work experience..."
+                                   placeholder={t('Tell us about your work experience...')} 
                                    required
                                />
                            </div>
@@ -430,7 +437,8 @@ function CompleteProfilePage() {
                       disabled={submitting}
                       className={`py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${submitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                      {submitting ? 'Saving Profile...' : 'Save Profile'}
+                      {/* Translate button text based on submitting state */}
+                      {submitting ? t('Saving Profile...') : t('Save Profile')}
                   </button>
               </div>
           )}
@@ -439,12 +447,12 @@ function CompleteProfilePage() {
           {/* Error and Success Messages */}
           {error && (
             <div className="mt-4 text-center text-red-600">
-              <p>{error}</p>
+              <p>{error}</p> {/* Error messages are already translated */}
             </div>
           )}
            {successMessage && (
             <div className="mt-4 text-center text-green-600">
-              <p>{successMessage}</p>
+              <p>{successMessage}</p> {/* Success messages are already translated */}
             </div>
           )}
 

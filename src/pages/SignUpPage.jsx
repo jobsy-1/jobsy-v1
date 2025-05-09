@@ -1,9 +1,13 @@
+// src/pages/SignUpPage.jsx
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient'; // Assuming you have supabaseClient.js set up
 import { useNavigate, Link } from 'react-router-dom'; // Use Link for navigation
+import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
 
 function SignUpPage() {
   const navigate = useNavigate();
+  // Call the hook to get the translation function 't'
+  const { t } = useTranslation();
 
   // State to manage the current step in the sign-up flow
   const [currentStep, setCurrentStep] = useState(1);
@@ -31,30 +35,30 @@ function SignUpPage() {
     if (currentStep === 1) {
       // Validate Email and Password
       if (!formData.email || !formData.password) {
-        setError('Please enter both email and password.');
+        setError(t('Please enter both email and password.')); // Translate error message
         return;
       }
       // Add more robust email and password format validation here
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-          setError('Please enter a valid email address.');
+          setError(t('Please enter a valid email address.')); // Translate error message
           return;
       }
        if (formData.password.length < 6) { // Supabase default minimum password length is 6
-           setError('Password must be at least 6 characters long.');
+           setError(t('Password must be at least 6 characters long.')); // Translate error message
            return;
        }
 
     } else if (currentStep === 2) {
       // Validate Terms Agreement
       if (!formData.agreedToTerms) {
-        setError('You must agree to the terms and conditions.');
+        setError(t('You must agree to the terms and conditions.')); // Translate error message
         return;
       }
     } else if (currentStep === 3) {
         // Validate User Type Selection
         if (!formData.userType) {
-            setError('Please choose whether you want to hire or find a job.');
+            setError(t('Please choose whether you want to hire or find a job.')); // Translate error message
             return;
         }
          // If user type is selected, proceed to the final submission step (Step 4)
@@ -121,7 +125,7 @@ function SignUpPage() {
 
       if (signUpError) {
         console.error('Supabase Sign Up Error:', signUpError);
-        setError(signUpError.message);
+        setError(t(signUpError.message)); // Translate Supabase error message
         setLoading(false);
         return;
       }
@@ -129,14 +133,14 @@ function SignUpPage() {
        // If signup is successful, instruct the user to check their email.
        // The user object will exist, but the session might be null until email is confirmed.
        if (data && data.user) {
-           setSuccessMessage('Registration successful! Please check your email to verify your account.');
+           setSuccessMessage(t('Registration successful! Please check your email to verify your account.')); // Translate success message
            setLoading(false);
            // Optionally redirect to a "Check Your Email" page immediately
            // navigate('/check-email');
        } else {
             // Handle cases where signup might fail without a specific error object returned
             console.error('Supabase Sign Up did not return a user:', data);
-            setError('Registration failed. Please try again.');
+            setError(t('Registration failed. Please try again.')); // Translate fallback error
             setLoading(false);
        }
 
@@ -148,7 +152,7 @@ function SignUpPage() {
 
     } catch (error) {
       console.error('Unexpected Error during Sign Up:', error);
-      setError('An unexpected error occurred. Please try again.');
+      setError(t('An unexpected error occurred. Please try again.')); // Translate error message
       setLoading(false);
     }
   };
@@ -158,16 +162,17 @@ function SignUpPage() {
   return (
     <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
+        {/* Translate the page title based on the current step */}
         <h1 className="text-3xl font-bold text-center text-[#355C7D] mb-8">
-          {currentStep === 1 && 'Sign Up'}
-          {currentStep === 2 && 'Terms and Conditions'}
-          {currentStep === 3 && 'Choose Your Path'}
-          {currentStep === 4 && 'Complete Registration'} {/* Updated title for final step */}
+          {currentStep === 1 && t('Sign Up')}
+          {currentStep === 2 && t('Terms and Conditions')}
+          {currentStep === 3 && t('Choose Your Path')}
+          {currentStep === 4 && t('Complete Registration')} {/* Updated title for final step */}
         </h1>
 
-        {/* Step Indicator (Optional) */}
+        {/* Step Indicator (Optional) - Use interpolation for numbers */}
          <div className="mb-8 text-center text-lg font-semibold text-gray-600">
-            Step {currentStep} of 4
+            {t('Step {{currentStep}} of 4', { currentStep: currentStep })} {/* Translate step indicator */}
          </div>
 
 
@@ -180,7 +185,7 @@ function SignUpPage() {
               <div>
                 <label htmlFor="email" className="inline-block mb-2">
                   <span className="px-4 py-1 bg-[#F8B195] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                    Email Address
+                    {t('Email Address')} {/* Translate label */}
                   </span>
                 </label>
                 <input
@@ -190,7 +195,7 @@ function SignUpPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#A8E6CE] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                  placeholder="Enter your email"
+                  placeholder={t('Enter your email')}
                   required
                 />
               </div>
@@ -199,7 +204,7 @@ function SignUpPage() {
               <div>
                 <label htmlFor="password" className="inline-block mb-2">
                    <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                    Password
+                    {t('Password')} {/* Translate label */}
                    </span>
                 </label>
                 <input
@@ -209,7 +214,7 @@ function SignUpPage() {
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                  placeholder="Create a password"
+                  placeholder={t('Create a password')}
                   required
                 />
               </div>
@@ -220,10 +225,10 @@ function SignUpPage() {
           {currentStep === 2 && (
             <>
               <div className="border rounded-lg p-4 h-40 overflow-y-auto bg-white text-gray-700 text-sm">
-                {/* Placeholder Terms and Conditions */}
-                <p className="font-semibold mb-2">Jobsy Terms and Conditions</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <p className="mt-2">... (More terms) ...</p>
+                {/* Placeholder Terms and Conditions - Need to translate the actual terms */}
+                <p className="font-semibold mb-2">{t('Jobsy Terms and Conditions')}</p> {/* Translate title */}
+                <p>{t('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')}</p> {/* Translate placeholder text */}
+                <p className="mt-2">{t('... (More terms) ...')}</p> {/* Translate placeholder text */}
               </div>
               <div className="flex items-center">
                 <input
@@ -236,7 +241,7 @@ function SignUpPage() {
                   required // Require agreement
                 />
                 <label htmlFor="agreedToTerms" className="ml-2 text-sm text-gray-600">
-                  I agree to the <a href="#" className="text-[#60a09b] hover:underline">Terms and Conditions</a>
+                  {t('I agree to the')} <a href="#" className="text-[#60a09b] hover:underline">{t('Terms and Conditions')}</a> {/* Translate text and link text */}
                 </label>
               </div>
             </>
@@ -250,14 +255,14 @@ function SignUpPage() {
                       onClick={() => handleUserTypeSelect('hire')}
                       className={`py-4 px-6 rounded-lg text-xl font-semibold transition-colors duration-300 ${formData.userType === 'hire' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
                   >
-                      I want to Hire People
+                      {t('I want to Hire People')} {/* Translate button text */}
                   </button>
                    <button
                       type="button" // Use type="button" to prevent form submission
                       onClick={() => handleUserTypeSelect('work')}
                        className={`py-4 px-6 rounded-lg text-xl font-semibold transition-colors duration-300 ${formData.userType === 'work' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
                   >
-                      I want to Find a Job
+                      {t('I want to Find a Job')} {/* Translate button text */}
                   </button>
               </div>
           )}
@@ -265,8 +270,8 @@ function SignUpPage() {
            {/* --- Step 4: Final Submission (Authentication Signup Only) --- */}
            {currentStep === 4 && (
                <div className="text-center text-gray-700 text-lg">
-                   <p className="mb-4">Click "Complete Registration" to create your account.</p>
-                   <p>You will receive an email to verify your address before you can log in and complete your profile.</p>
+                   <p className="mb-4">{t('Click "Complete Registration" to create your account.')}</p> {/* Translate paragraph */}
+                   <p>{t('You will receive an email to verify your address before you can log in and complete your profile.')}</p> {/* Translate paragraph */}
                </div>
            )}
 
@@ -280,7 +285,7 @@ function SignUpPage() {
                 onClick={handleBack}
                 className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-gray-800 bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition duration-200 ease-in-out"
               >
-                Back
+                {t('Back')} {/* Translate button text */}
               </button>
             )}
              {currentStep === 4 && ( // Show Back button on step 4 to go back to user type selection
@@ -289,7 +294,7 @@ function SignUpPage() {
                  onClick={handleBack}
                  className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-gray-800 bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-2 focus::ring-offset-2 focus:ring-gray-300 transition duration-200 ease-in-out"
                >
-                 Back
+                 {t('Back')} {/* Translate button text */}
                </button>
              )}
 
@@ -302,7 +307,7 @@ function SignUpPage() {
                 onClick={handleNext}
                 className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ml-auto"
               >
-                Next
+                {t('Next')} {/* Translate button text */}
               </button>
             )}
 
@@ -313,7 +318,8 @@ function SignUpPage() {
                 disabled={loading} // Disable button when loading
                 className={`py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''} ml-auto`}
               >
-                {loading ? 'Registering...' : 'Complete Registration'}
+                {/* Translate button text based on loading state */}
+                {loading ? t('Registering...') : t('Complete Registration')}
               </button>
             )}
           </div>
@@ -321,12 +327,12 @@ function SignUpPage() {
           {/* Error and Success Messages */}
           {error && (
             <div className="mt-4 text-center text-red-600">
-              <p>{error}</p>
+              <p>{error}</p> {/* Error message is already translated */}
             </div>
           )}
            {successMessage && (
             <div className="mt-4 text-center text-green-600">
-              <p>{successMessage}</p>
+              <p>{successMessage}</p> {/* Success message is already translated */}
             </div>
           )}
 
@@ -336,9 +342,9 @@ function SignUpPage() {
         {/* "Already have an account?" link - Show only on the first step */}
         {currentStep === 1 && (
           <div className="mt-6 text-center">
-            <span className="text-gray-600">Already have an account? </span>
+            <span className="text-gray-600">{t('Already have an account?')} </span> {/* Translate text */}
             <Link to="/auth/login" className="text-[#60a09b] hover:underline font-semibold">
-              Log In
+              {t('Log In')} {/* Translate link text */}
             </Link>
           </div>
         )}

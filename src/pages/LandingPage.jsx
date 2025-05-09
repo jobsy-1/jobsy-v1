@@ -5,7 +5,6 @@ import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import WhyJobsySection from '../components/WhyJobsySection';
 import WorkThatFeelsFunSection from '../components/WorkThatFeelsFunSection';
-import AboutUsSection from '../components/AboutUsSection';
 import ContactSection from '../components/ContactSection';
 
 // Main Landing Page component that assembles all the sections
@@ -25,7 +24,6 @@ function LandingPage() {
       <HeroSection />
       <WhyJobsySection />
       <WorkThatFeelsFunSection />
-      <AboutUsSection />
       <ContactSection />
 
       {/* Footer (Simple placeholder) */}

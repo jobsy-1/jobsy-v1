@@ -1,9 +1,13 @@
 // src/components/FloatingTag.jsx
 import React from 'react';
 import { motion } from "framer-motion"; // Import motion for animation
+import { useTranslation } from 'react-i18next'; // Import the hook
 
 // Component for a single floating tag with animation
 const FloatingTag = ({ tag, delay }) => {
+  // Call the hook to get the translation function 't'
+  const { t } = useTranslation();
+
   return (
     // motion.div for Framer Motion animation
     <motion.div
@@ -19,7 +23,8 @@ const FloatingTag = ({ tag, delay }) => {
       // Styling classes for the tag appearance (padding, text, font, rounded, shadow, gradient)
       className={`px-6 py-3 text-[#213547] text-md font-semibold rounded-full shadow-md bg-gradient-to-r ${tag.gradient}`}
     >
-      {tag.label} {/* Display the tag text/emoji */}
+      {/* Use t() to translate the tag label */}
+      {t(tag.label)} {/* Display the translated tag text/emoji */}
     </motion.div>
   );
 };
