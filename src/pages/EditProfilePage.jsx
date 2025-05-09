@@ -20,7 +20,7 @@ function EditProfilePage() {
     talentSkills: '', // Will store as comma-separated string initially
     jobExperience: '', // More relevant for 'work' user type
     phoneNumber: '',
-    userType: null, // User type is usually not editable after creation
+    userType: null, // User type will now be editable
   });
 
   // State to manage UI state
@@ -77,7 +77,7 @@ function EditProfilePage() {
             talentSkills: profile.talent_skills?.join(', ') || '',
             jobExperience: profile.job_experience || '',
             phoneNumber: profile.phone_number || '',
-            userType: profile.user_type || null, // Assuming userType is fetched but not editable
+            userType: profile.user_type || null, // Populate userType from fetched profile
         });
         setLoading(false);
       } else {
@@ -114,6 +114,12 @@ function EditProfilePage() {
     }));
   };
 
+   // --- Handler for User Type Selection ---
+   const handleUserTypeSelect = (type) => {
+       setProfileData(prevState => ({ ...prevState, userType: type }));
+   };
+
+
   // --- Handler for Profile Form Submission (Update) ---
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -133,6 +139,11 @@ function EditProfilePage() {
           setError(t('Please fill out all required job seeker profile fields.')); // Translate error message
           return;
       }
+      // Ensure user type is selected
+      if (!profileData.userType) {
+          setError(t('Please select your user type.')); // Translate error message
+          return;
+      }
 
 
     setSubmitting(true); // Use submitting state for form specific loading
@@ -142,7 +153,8 @@ function EditProfilePage() {
     try {
       // Prepare profile data for update
       const profileToUpdate = {
-          // Do NOT update the 'id' or 'user_type' here if they are not editable
+          // Include user_type in the update object now that it's editable
+          user_type: profileData.userType,
           full_name: profileData.fullName,
           nationality: profileData.nationality,
           // Convert comma-separated strings to arrays, filter out empty strings
@@ -201,25 +213,45 @@ function EditProfilePage() {
     <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Translate the page title */}
-        <h1 className="text-3xl font-bold text-center text-[#355C7D] mb-8">
+        <h1 className="text-3xl font-bold text-center text-[#60a09b] mb-8">
           {t('Edit Your Profile')}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Display User Type (Not editable) */}
-          {profileData.userType && (
-              <div>
-                  <label className="inline-block mb-2">
-                      <span className="px-4 py-1 bg-gray-300 text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center">
-                         {t('User Type')} {/* Translate label */}
-                      </span>
+          {/* User Type Selection (Now Editable) */}
+          {/* Added a label and radio buttons for user type */}
+          <div>
+              <label className="inline-block mb-2">
+                  <span className="px-4 py-1 bg-gray-300 text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center">
+                     {t('User Type')} {/* Translate label */}
+                  </span>
+              </label>
+              <div className="flex space-x-4 mt-2"> {/* Flex container for radio buttons */}
+                  <label className="inline-flex items-center">
+                      <input
+                          type="radio"
+                          name="userType"
+                          value="hire"
+                          checked={profileData.userType === 'hire'}
+                          onChange={() => handleUserTypeSelect('hire')} // Use dedicated handler
+                          className="form-radio text-[#60a09b] h-5 w-5"
+                      />
+                      <span className="ml-2 text-gray-700">{t('I want to Hire People')}</span> {/* Translate label */}
                   </label>
-                   <p className="text-lg text-gray-700 mt-1">
-                       {profileData.userType === 'hire' ? t('Hiring') : t('Working')} {/* Translate display value */}
-                   </p>
+                  <label className="inline-flex items-center">
+                      <input
+                          type="radio"
+                          name="userType"
+                          value="work"
+                          checked={profileData.userType === 'work'}
+                          onChange={() => handleUserTypeSelect('work')} // Use dedicated handler
+                          className="form-radio text-[#60a09b] h-5 w-5"
+                      />
+                      <span className="ml-2 text-gray-700">{t('I want to Find a Job')}</span> {/* Translate label */}
+                  </label>
               </div>
-          )}
+          </div>
 
 
           {/* Full Name Input */}
@@ -255,7 +287,7 @@ function EditProfilePage() {
                   value={profileData.nationality}
                   onChange={handleInputChange}
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#C06C84] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                  placeholder={t('Enter your nationality')} 
+                  placeholder={t('Enter your nationality')}
                   required
               />
           </div>
