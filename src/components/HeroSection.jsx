@@ -37,15 +37,15 @@ function HeroSection() {
             to="/signup"
             className="bg-[#60a09b] hover:bg-[#456C9D] text-white font-semibold rounded-full px-8 py-3 transition-colors duration-300"
           >
-            {t('Get Started')} {/* Translated button text */}
+            {t('create an account')} {/* Translated button text */}
           </Link>
           {/* Learn More Button - Links to About section (using #) or a separate page - Use t() for button text */}
            {/* Using <a> for internal page anchor */}
           <a
-            href="#about-us" // Link to the About Us section ID
+            href="/auth/login" // Link to the About Us section ID
             className="bg-[#F8B195] hover:bg-[#F67280] text-white font-semibold rounded-full px-8 py-3 transition-colors duration-300"
           >
-            {t('Learn More')} {/* Translated button text */}
+            {t('Login')} {/* Translated button text */}
           </a>
         </div>
 

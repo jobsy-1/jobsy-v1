@@ -133,7 +133,7 @@ function SignUpPage() {
        // If signup is successful, instruct the user to check their email.
        // The user object will exist, but the session might be null until email is confirmed.
        if (data && data.user) {
-           setSuccessMessage(t('Registration successful! Please check your email to verify your account.')); // Translate success message
+           setSuccessMessage(t('Registration successful! Please check your email to verify your account. (check your spam box, if you did not see the email.)')); // Translate success message
            setLoading(false);
            // Optionally redirect to a "Check Your Email" page immediately
            // navigate('/check-email');
@@ -227,8 +227,22 @@ function SignUpPage() {
               <div className="border rounded-lg p-4 h-40 overflow-y-auto bg-white text-gray-700 text-sm">
                 {/* Placeholder Terms and Conditions - Need to translate the actual terms */}
                 <p className="font-semibold mb-2">{t('Jobsy Terms and Conditions')}</p> {/* Translate title */}
-                <p>{t('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')}</p> {/* Translate placeholder text */}
-                <p className="mt-2">{t('... (More terms) ...')}</p> {/* Translate placeholder text */}
+                <p>{t('At [jobsy], our mission is to support freelancers by providing a platform that connects talent with opportunity. We are proud to offer a space where independent professionals can showcase their skills, build connections, and grow their careers.')}</p> 
+                <br />
+                <p>{t('However, it’s important to clarify the nature of our role. While we facilitate discovery and connection, we are not involved in the details of any agreements, communications, payments, or outcomes between freelancers and their clients.')}</p> {/* Translate placeholder text */}
+                <br />
+                <p>{t('In simpler terms:')}</p> {/* Translate placeholder text */}
+                <br />
+                <p>{t('We are not responsible for project terms, deliverables, or payment disputes.')}</p> {/* Translate placeholder text */}
+                <br />
+                <p>{t('We do not mediate conflicts or enforce contractual obligations between users.')}</p> {/* Translate placeholder text */}
+                <br />
+                <p>{t('We provide the platform—you take charge of your business. ')}</p> {/* Translate placeholder text */}
+                <br />
+                <p>{t('By using this website, you acknowledge that all freelance work conducted as a result of connections made here is your responsibility to manage. We trust in your professionalism and ability to navigate your freelance relationships with integrity, clarity, and care.')}</p> {/* Translate placeholder text */}
+                <br />
+                <p>{t('We’re honored to be a part of your journey—and while we don’t step into the spotlight with you, we’re here to keep the stage well-lit')}</p> {/* Translate placeholder text */}
+             
               </div>
               <div className="flex items-center">
                 <input

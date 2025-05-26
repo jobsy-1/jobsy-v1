@@ -80,23 +80,23 @@ function CompleteProfilePage() {
 
           // Optionally populate userType from auth.users metadata if stored there during signup
           if (user.user_metadata && user.user_metadata.user_type) {
-              setProfileData(prevState => ({
-                  ...prevState,
-                  userType: user.user_metadata.user_type
-              }));
+            setProfileData(prevState => ({
+              ...prevState,
+              userType: user.user_metadata.user_type
+            }));
           } else {
-              // If user_type wasn't stored as metadata, you might need to ask the user again
-              // or handle this case based on your application logic.
-              // For now, we'll assume it's either in metadata or needs to be asked.
-               console.warn("User type not found in auth.users metadata. User will need to select again or logic needs adjustment.");
-               // If userType is critical and not in metadata, you might redirect them back
-               // to a page to select user type or add a step here.
-               // For this component, we'll proceed assuming userType will be handled.
+            // If user_type wasn't stored as metadata, you might need to ask the user again
+            // or handle this case based on your application logic.
+            // For now, we'll assume it's either in metadata or needs to be asked.
+            console.warn("User type not found in auth.users metadata. User will need to select again or logic needs adjustment.");
+            // If userType is critical and not in metadata, you might redirect them back
+            // to a page to select user type or add a step here.
+            // For this component, we'll proceed assuming userType will be handled.
           }
         }
       } else {
-          // Should not happen if authError is handled, but as a fallback
-          navigate('/auth/login');
+        // Should not happen if authError is handled, but as a fallback
+        navigate('/auth/login');
       }
     }
 
@@ -126,11 +126,11 @@ function CompleteProfilePage() {
     }));
   };
 
-   // --- Handler for User Type Selection (if needed on this page) ---
-   // This is only needed if userType wasn't stored in auth.users metadata
-   const handleUserTypeSelect = (type) => {
-       setProfileData(prevState => ({ ...prevState, userType: type }));
-   };
+  // --- Handler for User Type Selection (if needed on this page) ---
+  // This is only needed if userType wasn't stored in auth.users metadata
+  const handleUserTypeSelect = (type) => {
+    setProfileData(prevState => ({ ...prevState, userType: type }));
+  };
 
 
   // --- Handler for Profile Form Submission ---
@@ -138,23 +138,23 @@ function CompleteProfilePage() {
     event.preventDefault();
 
     if (!user) {
-        setError(t('User not authenticated.')); // Translate error message
-        return;
+      setError(t('User not authenticated.')); // Translate error message
+      return;
     }
 
-     // Basic validation for required fields before submission
-     if (!profileData.fullName || !profileData.nationality || !profileData.age || !profileData.gender || !profileData.phoneNumber) {
-         setError(t('Please fill out all required profile fields.')); // Translate error message
-         return;
-     }
-      if (profileData.userType === 'work' && (!profileData.talentSkills || !profileData.jobExperience || !profileData.knownLanguages)) {
-          setError(t('Please fill out all required job seeker profile fields.')); // Translate error message
-          return;
-      }
-       if (!profileData.userType) {
-           setError(t('User type is missing. Please select your user type.')); // Translate error message
-           return;
-       }
+    // Basic validation for required fields before submission
+    if (!profileData.fullName || !profileData.nationality || !profileData.age || !profileData.gender || !profileData.phoneNumber) {
+      setError(t('Please fill out all required profile fields.')); // Translate error message
+      return;
+    }
+    if (profileData.userType === 'work' && (!profileData.talentSkills || !profileData.jobExperience || !profileData.knownLanguages)) {
+      setError(t('Please fill out all required job seeker profile fields.')); // Translate error message
+      return;
+    }
+    if (!profileData.userType) {
+      setError(t('User type is missing. Please select your user type.')); // Translate error message
+      return;
+    }
 
 
     setSubmitting(true); // Use submitting state for form specific loading
@@ -164,19 +164,19 @@ function CompleteProfilePage() {
     try {
       // Prepare profile data for insertion
       const profileToInsert = {
-          id: user.id, // Use the authenticated user's ID
-          user_type: profileData.userType,
-          full_name: profileData.fullName,
-          nationality: profileData.nationality,
-          // Convert comma-separated strings to arrays, filter out empty strings
-          known_languages: profileData.knownLanguages.split(',').map(lang => lang.trim()).filter(lang => lang),
-          // photo: profileData.photo ? 'path/to/uploaded/photo' : null, // Handle photo upload separately
-          age: parseInt(profileData.age, 10) || null, // Convert to number
-          gender: profileData.gender,
-          talent_skills: profileData.talentSkills.split(',').map(skill => skill.trim()).filter(skill => skill),
-          job_experience: profileData.jobExperience,
-          phone_number: profileData.phoneNumber,
-          // created_at and updated_at will be handled by database defaults/triggers
+        id: user.id, // Use the authenticated user's ID
+        user_type: profileData.userType,
+        full_name: profileData.fullName,
+        nationality: profileData.nationality,
+        // Convert comma-separated strings to arrays, filter out empty strings
+        known_languages: profileData.knownLanguages.split(',').map(lang => lang.trim()).filter(lang => lang),
+        // photo: profileData.photo ? 'path/to/uploaded/photo' : null, // Handle photo upload separately
+        age: parseInt(profileData.age, 10) || null, // Convert to number
+        gender: profileData.gender,
+        talent_skills: profileData.talentSkills.split(',').map(skill => skill.trim()).filter(skill => skill),
+        job_experience: profileData.jobExperience,
+        phone_number: profileData.phoneNumber,
+        // created_at and updated_at will be handled by database defaults/triggers
       };
 
       // Insert profile data into the 'profiles' table
@@ -220,11 +220,11 @@ function CompleteProfilePage() {
 
   // If profile already exists, show a message before redirecting
   if (profileExists) {
-       return (
-         <div className="min-h-screen bg-[#fefef2] flex items-center justify-center">
-           <p className="text-xl font-semibold text-[#355C7D]">{successMessage}</p> {/* successMessage is already translated */}
-         </div>
-       );
+    return (
+      <div className="min-h-screen bg-[#fefef2] flex items-center justify-center">
+        <p className="text-xl font-semibold text-[#355C7D]">{successMessage}</p> {/* successMessage is already translated */}
+      </div>
+    );
   }
 
 
@@ -237,27 +237,27 @@ function CompleteProfilePage() {
           {t('Complete Your Profile ({{userType}})', { userType: profileData.userType === 'hire' ? t('Hiring') : profileData.userType === 'work' ? t('Working') : t('Select Type') })}
         </h1>
 
-         {/* Display user type if already known, or provide selection if not */}
-         {!profileData.userType && (
-              <div className="flex flex-col space-y-4 mb-6">
-                   {/* Translate prompt text */}
-                   <p className="text-center text-gray-700 font-semibold">{t('What do you want to do?')}</p>
-                  <button
-                      type="button"
-                      onClick={() => handleUserTypeSelect('hire')}
-                      className={`py-3 px-6 rounded-lg text-lg font-semibold transition-colors duration-300 ${profileData.userType === 'hire' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
-                  >
-                      {t('I want to Hire People')} {/* Translate button text */}
-                  </button>
-                   <button
-                      type="button"
-                      onClick={() => handleUserTypeSelect('work')}
-                       className={`py-3 px-6 rounded-lg text-lg font-semibold transition-colors duration-300 ${profileData.userType === 'work' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
-                  >
-                      {t('I want to Find a Job')} {/* Translate button text */}
-                  </button>
-              </div>
-          )}
+        {/* Display user type if already known, or provide selection if not */}
+        {!profileData.userType && (
+          <div className="flex flex-col space-y-4 mb-6">
+            {/* Translate prompt text */}
+            <p className="text-center text-gray-700 font-semibold">{t('What do you want to do?')}</p>
+            <button
+              type="button"
+              onClick={() => handleUserTypeSelect('hire')}
+              className={`py-3 px-6 rounded-lg text-lg font-semibold transition-colors duration-300 ${profileData.userType === 'hire' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
+            >
+              {t('I want to Hire People')} {/* Translate button text */}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleUserTypeSelect('work')}
+              className={`py-3 px-6 rounded-lg text-lg font-semibold transition-colors duration-300 ${profileData.userType === 'work' ? 'bg-[#60a09b] text-white' : 'bg-white text-[#60a09b] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white'}`}
+            >
+              {t('I want to Find a Job')} {/* Translate button text */}
+            </button>
+          </div>
+        )}
 
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -265,182 +265,182 @@ function CompleteProfilePage() {
           {/* Profile Form Fields (Similar to Step 4 of Signup) */}
           {/* Only show fields if userType is selected */}
           {profileData.userType && (
-              <>
-                   {/* Full Name Input */}
-                   <div>
-                       <label htmlFor="fullName" className="inline-block mb-2">
-                           <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              {t('Full Name')} {/* Translate label */}
-                           </span>
-                       </label>
-                       <input
-                           id="fullName"
-                           type="text"
-                           name="fullName"
-                           value={profileData.fullName}
-                           onChange={handleInputChange}
-                           className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder={t('Enter your full name')}
-                           required
-                       />
-                   </div>
+            <>
+              {/* Full Name Input */}
+              <div>
+                <label htmlFor="fullName" className="inline-block mb-2">
+                  <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                    {t('Full Name')} {/* Translate label */}
+                  </span>
+                </label>
+                <input
+                  id="fullName"
+                  type="text"
+                  name="fullName"
+                  value={profileData.fullName}
+                  onChange={handleInputChange}
+                  className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                  placeholder={t('Enter your full name')}
+                  required
+                />
+              </div>
 
-                   {/* Nationality Input */}
-                   <div>
-                       <label htmlFor="nationality" className="inline-block mb-2">
-                           <span className="px-4 py-1 bg-[#FFDEAD] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              {t('Nationality')} {/* Translate label */}
-                           </span>
-                       </label>
-                       <input
-                           id="nationality"
-                           type="text"
-                           name="nationality"
-                           value={profileData.nationality}
-                           onChange={handleInputChange}
-                           className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#C06C84] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder={t('Enter your nationality')}
-                           required
-                       />
-                   </div>
+              {/* Nationality Input */}
+              <div>
+                <label htmlFor="nationality" className="inline-block mb-2">
+                  <span className="px-4 py-1 bg-[#FFDEAD] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                    {t('Nationality')} {/* Translate label */}
+                  </span>
+                </label>
+                <input
+                  id="nationality"
+                  type="text"
+                  name="nationality"
+                  value={profileData.nationality}
+                  onChange={handleInputChange}
+                  className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#C06C84] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                  placeholder={t('Enter your nationality')}
+                  required
+                />
+              </div>
 
-                    {/* Age Input */}
-                   <div>
-                       <label htmlFor="age" className="inline-block mb-2">
-                           <span className="px-4 py-1 bg-[#F8B195] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              {t('Age')} {/* Translate label */}
-                           </span>
-                       </label>
-                       <input
-                           id="age"
-                           type="number"
-                           name="age"
-                           value={profileData.age}
-                           onChange={handleInputChange}
-                           className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#A8E6CE] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder={t('Enter your age')} 
-                           required
-                           min="16"
-                           max="120"
-                       />
-                   </div>
+              {/* Age Input */}
+              <div>
+                <label htmlFor="age" className="inline-block mb-2">
+                  <span className="px-4 py-1 bg-[#F8B195] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                    {t('Age')} {/* Translate label */}
+                  </span>
+                </label>
+                <input
+                  id="age"
+                  type="number"
+                  name="age"
+                  value={profileData.age}
+                  onChange={handleInputChange}
+                  className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#A8E6CE] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                  placeholder={t('Enter your age')}
+                  required
+                  min="16"
+                  max="120"
+                />
+              </div>
 
-                    {/* Gender Input */}
-                   <div>
-                       <label htmlFor="gender" className="inline-block mb-2">
-                           <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              {t('Gender')} {/* Translate label */}
-                           </span>
-                       </label>
-                       <input
-                           id="gender"
-                           type="text"
-                           name="gender"
-                           value={profileData.gender}
-                           onChange={handleInputChange}
-                           className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder={t('Enter your gender')} 
-                           required
-                       />
-                   </div>
+              {/* Gender Input */}
+              <div>
+                <label htmlFor="gender" className="inline-block mb-2">
+                  <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                    {t('Gender')} {/* Translate label */}
+                  </span>
+                </label>
+                <input
+                  id="gender"
+                  type="text"
+                  name="gender"
+                  value={profileData.gender}
+                  onChange={handleInputChange}
+                  className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                  placeholder={t('Enter your gender')}
+                  required
+                />
+              </div>
 
-                   {/* Phone Number Input */}
-                   <div>
-                       <label htmlFor="phoneNumber" className="inline-block mb-2">
-                           <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                              {t('Phone Number')} {/* Translate label */}
-                           </span>
-                       </label>
-                       <input
-                           id="phoneNumber"
-                           type="tel"
-                           name="phoneNumber"
-                           value={profileData.phoneNumber}
-                           onChange={handleInputChange}
-                           className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                           placeholder={t('Enter your phone number')}
-                           required
-                       />
-                   </div>
+              {/* Phone Number Input */}
+              <div>
+                <label htmlFor="phoneNumber" className="inline-block mb-2">
+                  <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                    {t('Phone Number')} {/* Translate label */}
+                  </span>
+                </label>
+                <input
+                  id="phoneNumber"
+                  type="tel"
+                  name="phoneNumber"
+                  value={profileData.phoneNumber}
+                  onChange={handleInputChange}
+                  className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                  placeholder={t('Enter your phone number')}
+                  required
+                />
+              </div>
 
 
-                   {/* Conditional fields for 'work' user type */}
-                   {profileData.userType === 'work' && (
-                       <>
-                            {/* Known Languages Input */}
-                           <div>
-                               <label htmlFor="knownLanguages" className="inline-block mb-2">
-                                   <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                                      {t('Known Languages (comma-separated)')} {/* Translate label */}
-                                   </span>
-                               </label>
-                               <input
-                                   id="knownLanguages"
-                                   type="text"
-                                   name="knownLanguages"
-                                   value={profileData.knownLanguages}
-                                   onChange={handleInputChange}
-                                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                                   placeholder={t('e.g., English, Spanish, French')} 
-                                   required
-                               />
-                           </div>
+              {/* Conditional fields for 'work' user type */}
+              {profileData.userType === 'work' && (
+                <>
+                  {/* Known Languages Input */}
+                  <div>
+                    <label htmlFor="knownLanguages" className="inline-block mb-2">
+                      <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                        {t('Known Languages (comma-separated)')} {/* Translate label */}
+                      </span>
+                    </label>
+                    <input
+                      id="knownLanguages"
+                      type="text"
+                      name="knownLanguages"
+                      value={profileData.knownLanguages}
+                      onChange={handleInputChange}
+                      className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                      placeholder={t('e.g., English, Spanish, French')}
+                      required
+                    />
+                  </div>
 
-                           {/* Talent Skills Input */}
-                           <div>
-                               <label htmlFor="talentSkills" className="inline-block mb-2">
-                                   <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                                      {t('Talent/Skills (comma-separated)')} {/* Translate label */}
-                                   </span>
-                               </label>
-                               <input
-                                   id="talentSkills"
-                                   type="text"
-                                   name="talentSkills"
-                                   value={profileData.talentSkills}
-                                   onChange={handleInputChange}
-                                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                                   placeholder={t('e.g., Web Development, Graphic Design, Writing')}
-                                   required
-                               />
-                           </div>
+                  {/* Talent Skills Input */}
+                  <div>
+                    <label htmlFor="talentSkills" className="inline-block mb-2">
+                      <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                        {t('Talent/Skills (comma-separated)')} {/* Translate label */}
+                      </span>
+                    </label>
+                    <input
+                      id="talentSkills"
+                      type="text"
+                      name="talentSkills"
+                      value={profileData.talentSkills}
+                      onChange={handleInputChange}
+                      className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                      placeholder={t('e.g., Web Development, Graphic Design, Writing')}
+                      required
+                    />
+                  </div>
 
-                           {/* Job Experience Input */}
-                           <div>
-                               <label htmlFor="jobExperience" className="inline-block mb-2">
-                                    <span className="px-4 py-1 bg-[#FFDEAD] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                                       {t('Job Experience')} {/* Translate label */}
-                                    </span>
-                               </label>
-                               <textarea
-                                   id="jobExperience"
-                                   name="jobExperience"
-                                   value={profileData.jobExperience}
-                                   onChange={handleInputChange}
-                                   rows="4"
-                                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#C06C84] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight resize-y bg-transparent"
-                                   placeholder={t('Tell us about your work experience...')} 
-                                   required
-                               />
-                           </div>
-                       </>
-                   )}
-              </>
+                  {/* Job Experience Input */}
+                  <div>
+                    <label htmlFor="jobExperience" className="inline-block mb-2">
+                      <span className="px-4 py-1 bg-[#FFDEAD] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                        {t('Job Experience')} {/* Translate label */}
+                      </span>
+                    </label>
+                    <textarea
+                      id="jobExperience"
+                      name="jobExperience"
+                      value={profileData.jobExperience}
+                      onChange={handleInputChange}
+                      rows="4"
+                      className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#C06C84] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight resize-y bg-transparent"
+                      placeholder={t('Tell us about your work experience...')}
+                      required
+                    />
+                  </div>
+                </>
+              )}
+            </>
           )}
 
 
           {/* Submit Button */}
           {profileData.userType && ( // Only show submit button if userType is selected
-              <div className="flex justify-end pt-4">
-                  <button
-                      type="submit"
-                      disabled={submitting}
-                      className={`py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${submitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                      {/* Translate button text based on submitting state */}
-                      {submitting ? t('Saving Profile...') : t('Save Profile')}
-                  </button>
-              </div>
+            <div className="flex justify-end pt-4">
+              <button
+                type="submit"
+                disabled={submitting}
+                className={`py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-[#355C7D] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${submitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {/* Translate button text based on submitting state */}
+                {submitting ? t('Saving Profile...') : t('Save Profile')}
+              </button>
+            </div>
           )}
 
 
@@ -450,7 +450,7 @@ function CompleteProfilePage() {
               <p>{error}</p> {/* Error messages are already translated */}
             </div>
           )}
-           {successMessage && (
+          {successMessage && (
             <div className="mt-4 text-center text-green-600">
               <p>{successMessage}</p> {/* Success messages are already translated */}
             </div>

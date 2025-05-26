@@ -1,5 +1,4 @@
 // src/components/Header.jsx
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; // Import useTranslation hook
 import { useEffect } from 'react';
@@ -52,11 +51,10 @@ function Header() {
            {/* Note: For internal navigation in a React Router app, using <Link> is generally preferred over <a> to avoid full page reloads. */}
             <nav className="space-x-2 sm:space-x-4 mx-2 sm:mx-5 flex-shrink-0">
               {/* Use t() for link text */}
-              <a href="#about-us" className="text-[#60a09b] hover:text-[#8e82b4] text-sm sm:text-base">{t('About')}</a>
               <a href="#contact" className="text-[#60a09b] hover:text-[#8e82b4] text-sm sm:text-base">{t('Contact')}</a>
               {/* Added links for Why Jobsy and Work sections - Use t() */}
               <a href="#why-jobsy" className="text-[#60a09b] hover:text-[#8e82b4] text-sm sm:text-base hidden sm:inline">{t('Why Jobsy?')}</a> {/* Hide on small screens */}
-              <a href="#work-fun" className="text-[#60a09b] hover:text-[#8e82b4] text-sm sm:text-base hidden sm:inline">{t('Work Fun')}</a> {/* Hide on small screens */}
+              <a href="#work-fun" className="text-[#60a09b] hover:text-[#8e82b4] text-sm sm:text-base hidden sm:inline">{t('Fun Work')}</a> {/* Hide on small screens */}
             </nav>
 
              {/* Language Switcher (Flags in a circle) - Add onClick handlers */}
@@ -93,7 +91,7 @@ function Header() {
               className="bg-[#89cff0] text-white py-1 px-3 sm:py-2 sm:px-6 rounded-full text-sm sm:text-lg font-semibold hover:bg-[#8e82b4] transition-colors flex-shrink-0"
             >
               {/* Use t() for button text */}
-              {t('Get Started')}
+              {t('create an account')}
             </Link>
           </div>
 

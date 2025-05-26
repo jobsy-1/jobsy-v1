@@ -213,7 +213,7 @@ function EditProfilePage() {
     <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Translate the page title */}
-        <h1 className="text-3xl font-bold text-center text-[#60a09b] mb-8">
+        <h1 className="text-3xl font-bold text-center text-[#355C7D] mb-8">
           {t('Edit Your Profile')}
         </h1>
 
