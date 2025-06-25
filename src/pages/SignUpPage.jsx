@@ -1,82 +1,139 @@
 // src/pages/SignUpPage.jsx
-import React, { useState } from 'react';
-import { supabase } from '../supabaseClient'; // Assuming you have supabaseClient.js set up
-import { useNavigate, Link } from 'react-router-dom'; // Use Link for navigation
-import { useTranslation } from 'react-i18next'; // Import the useTranslation hook
+import React, { useState, useEffect, useRef } from 'react';
+import { supabase } from '../supabaseClient';
+import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function SignUpPage() {
   const navigate = useNavigate();
-  // Call the hook to get the translation function 't'
   const { t } = useTranslation();
 
-  // State to manage the current step in the sign-up flow
   const [currentStep, setCurrentStep] = useState(1);
-
-  // State to hold form data across steps (only needed for signup details now)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     agreedToTerms: false,
-    userType: null, // 'hire' or 'work' - We'll store this later
-    // Profile data is NOT needed in this initial signup component's state
+    userType: null, // 'hire' or 'work'
   });
 
-  // State for UI feedback
+  // OTP flow states
+  const [otpSent, setOtpSent] = useState(false); // Tracks if OTP has been *successfully* sent
+  const [otpCode, setOtpCode] = useState('');
+  const [showOtpInput, setShowOtpInput] = useState(false); // Controls OTP input UI visibility
+  const [resendCooldown, setResendCooldown] = useState(0); // Cooldown in seconds
+  const resendTimerRef = useRef(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [isAccountCreated, setIsAccountCreated] = useState(false); // New state to track account creation
 
-  // --- Handlers for Step Navigation ---
+  // --- Effect to check if user is already logged in and redirect ---
+  useEffect(() => {
+    async function checkAuthAndRedirect() {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data: profile, error: fetchProfileError } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          console.log('User already signed in, profile exists. Redirecting to dashboard.');
+          navigate('/dashboard');
+        } else if (fetchProfileError && fetchProfileError.code === 'PGRST116') {
+          console.log('User signed in, no profile found. Redirecting to complete profile.');
+          navigate('/complete-profile');
+        } else if (fetchProfileError) {
+            console.error('Error checking profile existence:', fetchProfileError);
+            setError(t('An error occurred while checking your profile.'));
+        }
+      }
+    }
+    checkAuthAndRedirect();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session && session.user) {
+         checkAuthAndRedirect();
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      if (resendTimerRef.current) {
+        clearInterval(resendTimerRef.current);
+      }
+    };
+  }, [navigate, t]);
+
+
+  // Effect to manage the resend cooldown timer
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      resendTimerRef.current = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+    } else {
+      if (resendTimerRef.current) {
+        clearInterval(resendTimerRef.current);
+        resendTimerRef.current = null;
+      }
+    }
+    return () => {
+      if (resendTimerRef.current) {
+        clearInterval(resendTimerRef.current);
+      }
+    };
+  }, [resendCooldown]);
+
 
   const handleNext = () => {
-    // Basic validation before moving to the next step
-    setError(null); // Clear previous errors
+    setError(null);
 
     if (currentStep === 1) {
-      // Validate Email and Password
       if (!formData.email || !formData.password) {
-        setError(t('Please enter both email and password.')); // Translate error message
+        setError(t('Please enter both email and password.'));
         return;
       }
-      // Add more robust email and password format validation here
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-          setError(t('Please enter a valid email address.')); // Translate error message
+          setError(t('Please enter a valid email address.'));
           return;
       }
-       if (formData.password.length < 6) { // Supabase default minimum password length is 6
-           setError(t('Password must be at least 6 characters long.')); // Translate error message
+       if (formData.password.length < 6) {
+           setError(t('Password must be at least 6 characters long.'));
            return;
        }
-
     } else if (currentStep === 2) {
-      // Validate Terms Agreement
       if (!formData.agreedToTerms) {
-        setError(t('You must agree to the terms and conditions.')); // Translate error message
+        setError(t('You must agree to the terms and conditions.'));
         return;
       }
     } else if (currentStep === 3) {
-        // Validate User Type Selection
         if (!formData.userType) {
-            setError(t('Please choose whether you want to hire or find a job.')); // Translate error message
+            setError(t('Please choose whether you want to hire or find a job.'));
             return;
         }
-         // If user type is selected, proceed to the final submission step (Step 4)
-         // Note: Step 4 will now trigger the Supabase signup, not profile form
-         setCurrentStep(currentStep + 1);
-         return; // Exit the handler after setting the step
+        // Removed: setCurrentStep(currentStep + 1); // User wants to explicitly press 'Next'
     }
-     // For other steps, just move forward if no specific validation fails
     setCurrentStep(currentStep + 1);
   };
 
   const handleBack = () => {
-    setError(null); // Clear errors when going back
-    setSuccessMessage(null); // Clear success message when going back
+    setError(null);
+    setSuccessMessage(null);
+    setOtpSent(false);
+    setShowOtpInput(false);
+    setResendCooldown(0); // Clear cooldown on back
+    setIsAccountCreated(false); // Reset account created state on back
+    if (resendTimerRef.current) {
+      clearInterval(resendTimerRef.current);
+      resendTimerRef.current = null;
+    }
     setCurrentStep(currentStep - 1);
   };
-
-  // --- Handlers for Form Input Changes ---
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -86,95 +143,178 @@ function SignUpPage() {
     }));
   };
 
-   // --- Handler for User Type Selection (Step 3) ---
-   const handleUserTypeSelect = (type) => {
-       setFormData(prevState => ({ ...prevState, userType: type }));
-       // Automatically move to the next step (Submission) after selecting user type
-       setCurrentStep(currentStep + 1);
-   };
+  const handleUserTypeSelect = (type) => {
+      setFormData(prevState => ({ ...prevState, userType: type }));
+      // Do NOT call setCurrentStep here, user will click 'Next'
+  };
 
+  // Helper function to send OTP
+  const sendOtp = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(t('Attempting to send verification code...'));
 
-  // --- Handler for Final Submission (Supabase Sign Up Only) ---
+    try {
+      const { error: otpSendError } = await supabase.auth.signInWithOtp({
+          email: formData.email,
+          options: {
+              channel: 'email',
+          }
+      });
 
-  const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission
+      if (otpSendError) {
+          console.error('Supabase OTP Send Error:', otpSendError);
+          if (otpSendError.message.includes('For security purposes, you can only request this after')) {
+            setError(t('Too many requests. Please wait a moment and try again.'));
+            const match = otpSendError.message.match(/after (\d+) seconds/);
+            const cooldownTime = match ? parseInt(match[1], 10) : 60;
+            setResendCooldown(cooldownTime);
+          } else {
+            setError(t(otpSendError.message || 'Failed to send verification code. Please try again.'));
+          }
+          setLoading(false);
+          setOtpSent(false); // Mark as not sent if there was an error
+          return false; // Indicate failure
+      }
 
-    // At this point (Step 4), we only perform the Supabase authentication signup.
-    // Profile data collection and insertion will happen AFTER email verification.
+      setOtpSent(true); // Mark OTP as truly sent if successful
+      setSuccessMessage(t('Verification code sent to your email. Please enter it below. (check your spam box if you don\'t see it)'));
+      setResendCooldown(60); // Start 60-second cooldown after successful send
+      setLoading(false);
+      return true; // Indicate success
+
+    } catch (unexpectedError) {
+      console.error('Unexpected Error during OTP Send:', unexpectedError);
+      setError(t('An unexpected error occurred while sending the code. Please try again.'));
+      setLoading(false);
+      setOtpSent(false); // Mark as not sent on unexpected error
+      return false; // Indicate failure
+    }
+  };
+
+  // New handler for OTP verification
+  const handleVerifyOtp = async (event) => {
+    event.preventDefault();
 
     setLoading(true);
     setError(null);
     setSuccessMessage(null);
 
     try {
-      // Sign up the user with Email and Password using Supabase Auth
-      // We can pass the userType here as metadata if we want it immediately
-      // available on the auth.users table, but it's not strictly necessary
-      // as we'll collect full profile data later.
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-             data: { // Storing user_type as metadata on the auth.users table
-                 user_type: formData.userType,
-             },
-            // Configure your redirect URL in Supabase Auth Settings
-            // redirectTo: 'http://localhost:5173/complete-profile' // Example redirect URL
-        }
+      const { data, error: verifyError } = await supabase.auth.verifyOtp({
+          email: formData.email,
+          token: otpCode,
+          type: 'email'
       });
 
-      if (signUpError) {
-        console.error('Supabase Sign Up Error:', signUpError);
-        setError(t(signUpError.message)); // Translate Supabase error message
-        setLoading(false);
-        return;
+      if (verifyError) {
+          console.error('Supabase OTP Verification Error:', verifyError);
+          setError(t(verifyError.message));
+          setLoading(false);
+          return;
       }
 
-       // If signup is successful, instruct the user to check their email.
-       // The user object will exist, but the session might be null until email is confirmed.
-       if (data && data.user) {
-           setSuccessMessage(t('Registration successful! Please check your email to verify your account. (check your spam box, if you did not see the email.)')); // Translate success message
-           setLoading(false);
-           // Optionally redirect to a "Check Your Email" page immediately
-           // navigate('/check-email');
-       } else {
-            // Handle cases where signup might fail without a specific error object returned
-            console.error('Supabase Sign Up did not return a user:', data);
-            setError(t('Registration failed. Please try again.')); // Translate fallback error
-            setLoading(false);
-       }
+      if (data && data.user) {
+          const user = data.user;
+          setSuccessMessage(t('Verification successful! Checking your profile...'));
 
+          const { data: profile, error: fetchProfileError } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', user.id)
+            .single();
 
-       // --- IMPORTANT: Profile Creation Logic Removed from here ---
-       // The code to insert into the 'profiles' table has been removed from this function.
-       // This will now happen in a separate flow AFTER email verification.
+          if (profile) {
+            console.log('OTP verified, profile exists. Redirecting to dashboard.');
+            setTimeout(() => { navigate('/dashboard'); }, 1500);
+          } else if (fetchProfileError && fetchProfileError.code === 'PGRST116') {
+            console.log('OTP verified, no profile found. Redirecting to complete profile.');
+            setTimeout(() => { navigate('/complete-profile'); }, 1500);
+          } else if (fetchProfileError) {
+              console.error('Error checking profile existence after OTP verification:', fetchProfileError);
+              setError(t('An error occurred after verification. Please try logging in.'));
+              setLoading(false);
+          }
+      } else {
+          console.warn('OTP verification did not return a user object.');
+          setError(t('OTP verification failed. Please try again.'));
+          setLoading(false);
+      }
 
-
-    } catch (error) {
-      console.error('Unexpected Error during Sign Up:', error);
-      setError(t('An unexpected error occurred. Please try again.')); // Translate error message
+    } catch (unexpectedError) {
+      console.error('Unexpected Error during OTP Verification:', unexpectedError);
+      setError(t('An unexpected error occurred during OTP verification. Please try again.'));
       setLoading(false);
     }
   };
 
-  // --- Render Method (Conditional Rendering based on Step) ---
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    // This handles the *initial* account creation with email and password
+    // This part should only run ONCE to create the account.
+    if (!isAccountCreated) {
+        try {
+            const { data, error: signUpError } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    data: { user_type: formData.userType },
+                }
+            });
+
+            if (signUpError) {
+                console.error('Supabase Sign Up Error:', signUpError);
+                setError(t(signUpError.message));
+                setLoading(false);
+                return;
+            }
+
+            if (data && data.user) {
+                setIsAccountCreated(true); // Mark account as created
+                setShowOtpInput(true); // Always show OTP input immediately after account creation
+                setSuccessMessage(t('Account created successfully! Please click "Send Verification Code" to receive your code.'));
+                // Do NOT call sendOtp here, user will explicitly click "Send Verification Code"
+            } else {
+                console.warn('Sign up did not return a user object after creation.');
+                setError(t('Registration failed. Please try again.'));
+            }
+
+        } catch (unexpectedError) {
+            console.error('Unexpected Error during Sign Up:', unexpectedError);
+            setError(t('An unexpected error occurred during registration. Please try again.'));
+        } finally {
+            setLoading(false);
+        }
+    }
+  };
+
 
   return (
-    <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        {/* Translate the page title based on the current step */}
+    <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6 relative">
+      {/* Jobsy Logo Link (text-based, styled like header, links to /auth/login) */}
+      <div className="absolute top-4 left-6 z-20">
+        <Link to="/auth/login" className="text-xl sm:text-2xl font-bold text-[#60a09b] flex-shrink-0">
+          <span>{t('Jobsy')}</span>
+        </Link>
+      </div>
+
+      <div className="w-full max-w-md mt-16 md:mt-0">
         <h1 className="text-3xl font-bold text-center text-[#60a09b] mb-8">
           {currentStep === 1 && t('Sign Up')}
           {currentStep === 2 && t('Terms and Conditions')}
           {currentStep === 3 && t('Choose Your Path')}
-          {currentStep === 4 && t('Complete Registration')} {/* Updated title for final step */}
+          {currentStep === 4 && t('Complete Registration')}
         </h1>
 
-        {/* Step Indicator (Optional) - Use interpolation for numbers */}
          <div className="mb-8 text-center text-lg font-semibold text-gray-600">
-            {t('Step {{currentStep}} of 4', { currentStep: currentStep })} {/* Translate step indicator */}
+            {t('Step {{currentStep}} of 4', { currentStep: currentStep })}
          </div>
-
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
@@ -184,8 +324,8 @@ function SignUpPage() {
               {/* Email Input */}
               <div>
                 <label htmlFor="email" className="inline-block mb-2">
-                  <span className="text-[#6A6A80] px-4 py-1 bg-[#E6E6FA] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                    {t('Email Address')} {/* Translate label */}
+                  <span className="px-4 py-1 bg-[#E6E6FA] font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                    {t('Email Address')}
                   </span>
                 </label>
                 <input
@@ -204,7 +344,7 @@ function SignUpPage() {
               <div>
                 <label htmlFor="password" className="inline-block mb-2">
                    <span className="px-4 py-1 bg-[#FADADD] text-[#A35C60] font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                    {t('Password')} {/* Translate label */}
+                    {t('Password')}
                    </span>
                 </label>
                 <input
@@ -225,24 +365,22 @@ function SignUpPage() {
           {currentStep === 2 && (
             <>
               <div className="border rounded-lg p-4 h-40 overflow-y-auto bg-white text-gray-700 text-sm">
-                {/* Placeholder Terms and Conditions - Need to translate the actual terms */}
-                <p className="font-semibold mb-2">{t('Jobsy Terms and Conditions')}</p> {/* Translate title */}
-                <p>{t('At [jobsy], our mission is to support freelancers by providing a platform that connects talent with opportunity. We are proud to offer a space where independent professionals can showcase their skills, build connections, and grow their careers.')}</p> 
+                <p className="font-semibold mb-2">{t('Jobsy Terms and Conditions')}</p>
+                <p>{t('At [jobsy], our mission is to support freelancers by providing a platform that connects talent with opportunity. We are proud to offer a space where independent professionals can showcase their skills, build connections, and grow their careers.')}</p>
                 <br />
-                <p>{t('However, it’s important to clarify the nature of our role. While we facilitate discovery and connection, we are not involved in the details of any agreements, communications, payments, or outcomes between freelancers and their clients.')}</p> {/* Translate placeholder text */}
+                <p>{t('However, it’s important to clarify the nature of our role. While we facilitate discovery and connection, we are not involved in the details of any agreements, communications, payments, or outcomes between freelancers and their clients.')}</p>
                 <br />
-                <p>{t('In simpler terms:')}</p> {/* Translate placeholder text */}
+                <p>{t('In simpler terms:')}</p>
                 <br />
-                <p>{t('We are not responsible for project terms, deliverables, or payment disputes.')}</p> {/* Translate placeholder text */}
+                <p>{t('We are not responsible for project terms, deliverables, or payment disputes.')}</p>
                 <br />
-                <p>{t('We do not mediate conflicts or enforce contractual obligations between users.')}</p> {/* Translate placeholder text */}
+                <p>{t('We do not mediate conflicts or enforce contractual obligations between users.')}</p>
                 <br />
-                <p>{t('We provide the platform—you take charge of your business. ')}</p> {/* Translate placeholder text */}
+                <p>{t('We provide the platform—you take charge of your business. ')}</p>
                 <br />
-                <p>{t('By using this website, you acknowledge that all freelance work conducted as a result of connections made here is your responsibility to manage. We trust in your professionalism and ability to navigate your freelance relationships with integrity, clarity, and care.')}</p> {/* Translate placeholder text */}
+                <p>{t('By using this website, you acknowledge that all freelance work conducted as a result of connections made here is your responsibility to manage. We trust in your professionalism and ability to navigate your freelance relationships with integrity, clarity, and care.')}</p>
                 <br />
-                <p>{t('We’re honored to be a part of your journey—and while we don’t step into the spotlight with you, we’re here to keep the stage well-lit')}</p> {/* Translate placeholder text */}
-             
+                <p>{t('We’re honored to be a part of your journey—and while we don’t step into the spotlight with you, we’re here to keep the stage well-lit')}</p>
               </div>
               <div className="flex items-center">
                 <input
@@ -252,10 +390,10 @@ function SignUpPage() {
                   checked={formData.agreedToTerms}
                   onChange={handleInputChange}
                   className="h-4 w-4 text-[#60a09b] border-gray-300 rounded focus:ring-[#60a09b]"
-                  required // Require agreement
+                  required
                 />
                 <label htmlFor="agreedToTerms" className="ml-2 text-sm text-gray-600">
-                  {t('I agree to the')} <a href="#" className="text-[#60a09b] hover:underline">{t('Terms and Conditions')}</a> {/* Translate text and link text */}
+                  {t('I agree to the')} <a href="#" className="text-[#60a09b] hover:underline">{t('Terms and Conditions')}</a>
                 </label>
               </div>
             </>
@@ -265,100 +403,159 @@ function SignUpPage() {
           {currentStep === 3 && (
               <div className="flex flex-col space-y-4">
                   <button
-                      type="button" // Use type="button" to prevent form submission
+                      type="button"
                       onClick={() => handleUserTypeSelect('hire')}
                       className={`py-4 px-6 rounded-lg text-xl font-semibold transition-colors bg-[#e6e6fa] text-[#6a6a80] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white`}
                   >
-                      {t('I want to Hire People')} {/* Translate button text */}
+                      {t('I want to Hire People')}
                   </button>
                    <button
-                      type="button" // Use type="button" to prevent form submission
+                      type="button"
                       onClick={() => handleUserTypeSelect('work')}
                        className={`py-4 px-6 rounded-lg text-xl font-semibold transition-colors bg-[#ffd1dc] text-[#880808] border border-[#60a09b] hover:bg-[#60a09b] hover:text-white`}
                   >
-                      {t('I want to Find a Job')} {/* Translate button text */}
+                      {t('I want to Find a Job')}
                   </button>
               </div>
           )}
 
-           {/* --- Step 4: Final Submission (Authentication Signup Only) --- */}
+           {/* --- Step 4: Final Submission / OTP Entry --- */}
            {currentStep === 4 && (
-               <div className="text-center text-gray-700 text-lg">
-                   <p className="mb-4">{t('Click "Complete Registration" to create your account.')}</p> {/* Translate paragraph */}
-                   <p>{t('You will receive an email to verify your address before you can log in and complete your profile.')}</p> {/* Translate paragraph */}
-               </div>
+               <>
+                   {/* Conditional rendering for OTP input or initial registration */}
+                   {showOtpInput ? ( // Show OTP input if account is created and we're ready for OTP
+                       <div className="space-y-4">
+                           <p className="text-center text-gray-700 text-lg">{successMessage}</p> {/* Display success message about OTP */}
+                           <div>
+                               <label htmlFor="otp" className="inline-block mb-2">
+                                   <span className="px-4 py-1 text-[#6A6A80] bg-[#E6E6FA] font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
+                                       {t('Verification Code')}
+                                   </span>
+                               </label>
+                               <input
+                                   id="otp"
+                                   type="text"
+                                   value={otpCode}
+                                   onChange={(e) => setOtpCode(e.target.value)}
+                                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#A8E6CE] focus:outline-none text-gray-800 text-lg text-center transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                                   placeholder={t('Enter the 6-digit code')}
+                                   required
+                                   maxLength="6" // OTPs are usually 6 digits
+                               />
+                           </div>
+                           <div className="flex justify-center pt-4">
+                               <button
+                                   type="button" // Use type="button" to prevent form default submit
+                                   onClick={handleVerifyOtp} // Call new OTP verification handler
+                                   disabled={loading || otpCode.length !== 6} // Disable if loading or code is not 6 chars
+                                   className={`py-3 px-8 border border-transparent rounded-full shadow-lg text-lg font-bold text-[#000080] bg-[#89cff0] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${loading || otpCode.length !== 6 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                               >
+                                   {loading ? t('Verifying...') : t('Verify Code')}
+                               </button>
+                           </div>
+                           {resendCooldown > 0 ? (
+                               <p className="text-sm text-gray-500 mt-2">{t('You can resend the code in {{count}} seconds.', { count: resendCooldown })}</p>
+                           ) : (
+                               <button
+                                   type="button"
+                                   onClick={sendOtp} // Call sendOtp again
+                                   disabled={loading}
+                                   className={`text-[#60a09b] hover:underline mt-2 text-sm ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                               >
+                                   {t('Resend Code')}
+                               </button>
+                           )}
+                           {error && ( // Display error message specific to OTP sending/verification
+                               <div className="mt-4 text-center text-red-600">
+                                   <p>{error}</p>
+                               </div>
+                           )}
+                       </div>
+                   ) : ( // Show initial signup message/button if account not created yet
+                       <div className="text-center text-gray-700 text-lg">
+                           <p className="mb-4">{t('Click "Complete Registration" to create your account.')}</p>
+                           <p>{t('A verification code will be sent to your email.')}</p>
+                       </div>
+                   )}
+               </>
            )}
 
-
-          {/* --- Navigation Buttons --- */}
+          {/* --- Navigation Buttons (Conditional for initial steps) --- */}
           <div className="flex justify-between pt-4">
-            {/* Back Button - Show if not on the first step */}
-            {currentStep > 1 && currentStep < 4 && ( // Show Back button on steps 2 and 3
+            {/* Back Button */}
+            {currentStep > 1 && !showOtpInput && ( // Show Back button on steps 2 and 3, or on step 4 before OTP is shown
               <button
-                type="button" // Important: Use type="button" to prevent form submission
+                type="button"
                 onClick={handleBack}
                 className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-gray-800 bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition duration-200 ease-in-out"
               >
-                {t('Back')} {/* Translate button text */}
+                {t('Back')}
               </button>
             )}
-             {currentStep === 4 && ( // Show Back button on step 4 to go back to user type selection
+             {/* Special Back Button for Step 4 if OTP is shown, allows going back to re-send OTP or adjust details */}
+             {currentStep === 4 && showOtpInput && (
                <button
                  type="button"
-                 onClick={handleBack}
+                 onClick={() => {
+                   setOtpSent(false);
+                   setShowOtpInput(false);
+                   setSuccessMessage(null); // Clear success message related to OTP
+                   setLoading(false); // Reset loading state
+                   setResendCooldown(0); // Clear cooldown if going back
+                   setIsAccountCreated(false); // Allow re-creating account or re-triggering initial send
+                   if (resendTimerRef.current) {
+                      clearInterval(resendTimerRef.current);
+                      resendTimerRef.current = null;
+                   }
+                 }}
                  className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-[#880808] bg-[#ffd1dc] hover:bg-gray-400 focus:outline-none focus:ring-2 focus::ring-offset-2 focus:ring-gray-300 transition duration-200 ease-in-out"
                >
-                 {t('Back')} {/* Translate button text */}
+                 {t('Start Over / Back')} {/* Changed text for clarity */}
                </button>
              )}
 
 
             {/* Next Button - Show on steps 1, 2, 3 */}
-            {/* Also hide if loading */}
             {currentStep < 4 && !loading && (
               <button
-                type="button" // Important: Use type="button" to prevent form submission
+                type="button"
                 onClick={handleNext}
                 className="py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-[#004D4D] bg-[#B3EBF2] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ml-auto"
               >
-                {t('Next')} {/* Translate button text */}
+                {t('Next')}
               </button>
             )}
 
-            {/* Submit Button - Show ONLY on the final step (Step 4) */}
-            {currentStep === 4 && (
+            {/* Submit Button for Initial Registration (Only visible if OTP not yet displayed) */}
+            {currentStep === 4 && !showOtpInput && (
               <button
-                type="submit" // Use type="submit" to trigger form submission
-                disabled={loading} // Disable button when loading
+                type="submit" // This button will trigger handleSubmit
+                disabled={loading}
                 className={`py-3 px-6 border border-transparent rounded-full shadow-lg text-lg font-bold text-[#000080] bg-[#89cff0] hover:bg-[#456C9D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#355C7D] transition duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''} ml-auto`}
               >
-                {/* Translate button text based on loading state */}
-                {loading ? t('Registering...') : t('Complete Registration')}
+                {loading ? t('Creating Account...') : t('Complete Registration')}
               </button>
             )}
           </div>
 
-          {/* Error and Success Messages */}
-          {error && (
+          {error && !showOtpInput && ( // Only show general errors if not in OTP input mode
             <div className="mt-4 text-center text-red-600">
-              <p>{error}</p> {/* Error message is already translated */}
+              <p>{error}</p>
             </div>
           )}
-           {successMessage && (
+           {successMessage && !showOtpInput && ( // Only show main success message if OTP not yet displayed
             <div className="mt-4 text-center text-green-600">
-              <p>{successMessage}</p> {/* Success message is already translated */}
+              <p>{successMessage}</p>
             </div>
           )}
-
 
         </form>
 
-        {/* "Already have an account?" link - Show only on the first step */}
         {currentStep === 1 && (
           <div className="mt-6 text-center">
-            <span className="text-gray-600">{t('Already have an account?')} </span> {/* Translate text */}
+            <span className="text-gray-600">{t('Already have an account?')} </span>
             <Link to="/auth/login" className="text-[#60a09b] hover:underline font-semibold">
-              {t('Log In')} {/* Translate link text */}
+              {t('Log In')}
             </Link>
           </div>
         )}

@@ -6,14 +6,14 @@ import CompleteProfilePage from './pages/CompleteProfilePage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import EditProfilePage from './pages/EditProfilePage';
-// Import other pages as you create them (e.g., SignUpPage)
+
 
 function App() {
   return (
-    <Router> {/* Use Router */}
-      <Routes> {/* Define Routes */}
-        <Route path="/" element={<LandingPage />} /> {/* Your Landing Page */}
-        <Route path="/signup" element={<SignUpPage />} /> {/* Your Sign Up Page */}
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route path="/complete-profile" element={<CompleteProfilePage />} />
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />

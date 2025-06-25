@@ -134,8 +134,14 @@ function LoginPage() {
   // --- Render Method ---
 
   return (
-    <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6 relative"> {/* Added relative positioning to parent container */}
+      {/* Jobsy Logo Link (text-based, styled like header) */}
+      <div className="absolute top-4 left-6 z-20"> {/* Position the logo at the top-left */}
+        <Link to="/" className="text-xl sm:text-2xl font-bold text-[#60a09b] flex-shrink-0">
+          <span>{t('Jobsy')}</span> {/* Plain text Jobsy logo, translated */}
+        </Link>
+      </div>
+      <div className="w-full max-w-md mt-16 md:mt-0"> {/* Added top margin to content to clear space for absolute logo */}
         {/* Translate the page title */}
         <h1 className="text-3xl font-bold text-center text-[#60a09b] mb-8">
           {t('Log In')}
@@ -156,7 +162,7 @@ function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#A8E6CE] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-              placeholder={t('Enter your email')} 
+              placeholder={t('Enter your email')}
               required
             />
           </div>

@@ -13,11 +13,11 @@ function EditProfilePage() {
   const [profileData, setProfileData] = useState({
     fullName: '',
     nationality: '',
-    knownLanguages: '', // Will store as comma-separated string initially
+    knownLanguages: '', // Remains as plain string in state for input binding
     // photo: null, // File object or URL - Photo upload is more complex
     age: '',
-    gender: '',
-    talentSkills: '', // Will store as comma-separated string initially
+    gender: '', // Will be set by select dropdown now
+    talentSkills: '', // Remains as plain string in state for input binding
     jobExperience: '', // More relevant for 'work' user type
     phoneNumber: '',
     userType: null, // User type will now be editable
@@ -68,12 +68,12 @@ function EditProfilePage() {
         setProfileData({
             fullName: profile.full_name || '',
             nationality: profile.nationality || '',
-            // Convert array back to comma-separated string for the input field
+            // Convert array from DB to comma-separated string for input field
             knownLanguages: profile.known_languages?.join(', ') || '',
             // photo: null, // Photo handling is separate
             age: profile.age || '',
-            gender: profile.gender || '',
-            // Convert array back to comma-separated string for the input field
+            gender: profile.gender || '', // Gender will now be populated for the select dropdown
+            // Convert array from DB to comma-separated string for input field
             talentSkills: profile.talent_skills?.join(', ') || '',
             jobExperience: profile.job_experience || '',
             phoneNumber: profile.phone_number || '',
@@ -102,7 +102,7 @@ function EditProfilePage() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate, t]); // Added t to dependency array
+  }, [navigate, t]);
 
 
   // --- Handler for Form Input Changes ---
@@ -130,11 +130,12 @@ function EditProfilePage() {
     }
 
      // Basic validation for required fields before submission
-     if (!profileData.fullName || !profileData.nationality || !profileData.age || !profileData.gender || !profileData.phoneNumber) {
+     // Added explicit check for gender not being empty or default option
+     if (!profileData.fullName || !profileData.nationality || !profileData.age || !profileData.gender || profileData.gender === '' || !profileData.phoneNumber) {
          setError(t('Please fill out all required profile fields.')); // Translate error message
          return;
      }
-      // Conditional validation for job seeker fields
+      // Conditional validation for job seeker fields - adjusted for string fields
       if (profileData.userType === 'work' && (!profileData.talentSkills || !profileData.jobExperience || !profileData.knownLanguages)) {
           setError(t('Please fill out all required job seeker profile fields.')); // Translate error message
           return;
@@ -157,11 +158,12 @@ function EditProfilePage() {
           user_type: profileData.userType,
           full_name: profileData.fullName,
           nationality: profileData.nationality,
-          // Convert comma-separated strings to arrays, filter out empty strings
+          // Convert comma-separated string to array, filter out empty strings before sending to DB
           known_languages: profileData.knownLanguages.split(',').map(lang => lang.trim()).filter(lang => lang),
-          // photo: profileData.photo ? 'path/to/uploaded/photo' : null, // Handle photo upload separately
+          // photo: null, // Photo handling is separate
           age: parseInt(profileData.age, 10) || null, // Convert to number
-          gender: profileData.gender,
+          gender: profileData.gender, // Gender is now directly from select
+          // Convert comma-separated string to array, filter out empty strings before sending to DB
           talent_skills: profileData.talentSkills.split(',').map(skill => skill.trim()).filter(skill => skill),
           job_experience: profileData.jobExperience,
           phone_number: profileData.phoneNumber,
@@ -268,7 +270,7 @@ function EditProfilePage() {
                   value={profileData.fullName}
                   onChange={handleInputChange}
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                  placeholder={t('Enter your full name')} 
+                  placeholder={t('Enter your full name')}
                   required
               />
           </div>
@@ -306,30 +308,32 @@ function EditProfilePage() {
                   value={profileData.age}
                   onChange={handleInputChange}
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#A8E6CE] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                  placeholder={t('Enter your age')} 
+                  placeholder={t('Enter your age')}
                   required
                   min="16"
                   max="120"
               />
           </div>
 
-           {/* Gender Input */}
+           {/* Gender Select Dropdown */}
           <div>
               <label htmlFor="gender" className="inline-block mb-2">
                   <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
                      {t('Gender')} {/* Translate label */}
                   </span>
               </label>
-              <input
-                  id="gender"
-                  type="text"
-                  name="gender"
-                  value={profileData.gender}
-                  onChange={handleInputChange}
-                  className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                  placeholder={t('Enter your gender')} 
-                  required
-              />
+              <select
+                id="gender"
+                name="gender"
+                value={profileData.gender}
+                onChange={handleInputChange}
+                className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
+                required
+              >
+                <option value="" disabled>{t('Select your gender')}</option> {/* Translated placeholder option */}
+                <option value="male">{t('Male')}</option> {/* Translated option */}
+                <option value="female">{t('Female')}</option> {/* Translated option */}
+              </select>
           </div>
 
           {/* Phone Number Input */}
@@ -346,7 +350,7 @@ function EditProfilePage() {
                   value={profileData.phoneNumber}
                   onChange={handleInputChange}
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                  placeholder={t('Enter your phone number')} 
+                  placeholder={t('Enter your phone number')}
                   required
               />
           </div>
@@ -369,7 +373,7 @@ function EditProfilePage() {
                           value={profileData.knownLanguages}
                           onChange={handleInputChange}
                           className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                          placeholder={t('e.g., English, Spanish, French')} 
+                          placeholder={t('e.g., English, Spanish, French')}
                           required
                       />
                   </div>
@@ -388,7 +392,7 @@ function EditProfilePage() {
                           value={profileData.talentSkills}
                           onChange={handleInputChange}
                           className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#F8B195] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                          placeholder={t('e.g., Web Development, Graphic Design, Writing')} 
+                          placeholder={t('e.g., Web Development, Graphic Design, Writing')}
                           required
                       />
                   </div>
@@ -407,7 +411,7 @@ function EditProfilePage() {
                           onChange={handleInputChange}
                           rows="4"
                           className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#C06C84] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight resize-y bg-transparent"
-                          placeholder={t('Tell us about your work experience...')} 
+                          placeholder={t('Tell us about your work experience...')}
                           required
                       />
                   </div>

@@ -13,11 +13,11 @@ function CompleteProfilePage() {
   const [profileData, setProfileData] = useState({
     fullName: '',
     nationality: '',
-    knownLanguages: '', // Will store as comma-separated string initially
+    knownLanguages: '', // Remains as plain string in state for input binding
     // photo: null, // File object or URL - Photo upload is more complex
     age: '',
-    gender: '',
-    talentSkills: '', // Will store as comma-separated string initially
+    gender: '', // Will be set by select dropdown now
+    talentSkills: '', // Remains as plain string in state for input binding
     jobExperience: '', // More relevant for 'work' user type
     phoneNumber: '',
     // userType will be fetched from auth.users metadata or determined here if not stored
@@ -85,17 +85,10 @@ function CompleteProfilePage() {
               userType: user.user_metadata.user_type
             }));
           } else {
-            // If user_type wasn't stored as metadata, you might need to ask the user again
-            // or handle this case based on your application logic.
-            // For now, we'll assume it's either in metadata or needs to be asked.
             console.warn("User type not found in auth.users metadata. User will need to select again or logic needs adjustment.");
-            // If userType is critical and not in metadata, you might redirect them back
-            // to a page to select user type or add a step here.
-            // For this component, we'll proceed assuming userType will be handled.
           }
         }
       } else {
-        // Should not happen if authError is handled, but as a fallback
         navigate('/auth/login');
       }
     }
@@ -114,7 +107,7 @@ function CompleteProfilePage() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate, t]); // Added t to dependency array
+  }, [navigate, t]);
 
 
   // --- Handler for Form Input Changes ---
@@ -127,7 +120,6 @@ function CompleteProfilePage() {
   };
 
   // --- Handler for User Type Selection (if needed on this page) ---
-  // This is only needed if userType wasn't stored in auth.users metadata
   const handleUserTypeSelect = (type) => {
     setProfileData(prevState => ({ ...prevState, userType: type }));
   };
@@ -143,7 +135,7 @@ function CompleteProfilePage() {
     }
 
     // Basic validation for required fields before submission
-    if (!profileData.fullName || !profileData.nationality || !profileData.age || !profileData.gender || !profileData.phoneNumber) {
+    if (!profileData.fullName || !profileData.nationality || !profileData.age || !profileData.gender || profileData.gender === '' || !profileData.phoneNumber) {
       setError(t('Please fill out all required profile fields.')); // Translate error message
       return;
     }
@@ -170,9 +162,9 @@ function CompleteProfilePage() {
         nationality: profileData.nationality,
         // Convert comma-separated strings to arrays, filter out empty strings
         known_languages: profileData.knownLanguages.split(',').map(lang => lang.trim()).filter(lang => lang),
-        // photo: profileData.photo ? 'path/to/uploaded/photo' : null, // Handle photo upload separately
         age: parseInt(profileData.age, 10) || null, // Convert to number
-        gender: profileData.gender,
+        gender: profileData.gender, // Gender is now directly from select
+        // Convert comma-separated strings to arrays, filter out empty strings
         talent_skills: profileData.talentSkills.split(',').map(skill => skill.trim()).filter(skill => skill),
         job_experience: profileData.jobExperience,
         phone_number: profileData.phoneNumber,
@@ -180,7 +172,6 @@ function CompleteProfilePage() {
       };
 
       // Insert profile data into the 'profiles' table
-      // RLS policy for INSERT should allow this since user is authenticated and id matches
       const { error: insertError } = await supabase
         .from('profiles')
         .insert([profileToInsert]);
@@ -325,23 +316,25 @@ function CompleteProfilePage() {
                 />
               </div>
 
-              {/* Gender Input */}
+              {/* Gender Select Dropdown */}
               <div>
                 <label htmlFor="gender" className="inline-block mb-2">
                   <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
                     {t('Gender')} {/* Translate label */}
                   </span>
                 </label>
-                <input
+                <select
                   id="gender"
-                  type="text"
                   name="gender"
                   value={profileData.gender}
                   onChange={handleInputChange}
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-[#FFDEAD] focus:outline-none text-gray-800 text-lg transition duration-200 ease-in-out appearance-none leading-tight bg-transparent"
-                  placeholder={t('Enter your gender')}
                   required
-                />
+                >
+                  <option value="" disabled>{t('Select your gender')}</option> {/* Translated placeholder option */}
+                  <option value="male">{t('Male')}</option> {/* Translated option */}
+                  <option value="female">{t('Female')}</option> {/* Translated option */}
+                </select>
               </div>
 
               {/* Phone Number Input */}
@@ -367,11 +360,11 @@ function CompleteProfilePage() {
               {/* Conditional fields for 'work' user type */}
               {profileData.userType === 'work' && (
                 <>
-                  {/* Known Languages Input */}
+                  {/* Known Languages Input (Remains text) */}
                   <div>
                     <label htmlFor="knownLanguages" className="inline-block mb-2">
                       <span className="px-4 py-1 bg-[#C06C84] text-white font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                        {t('Known Languages (comma-separated)')} {/* Translate label */}
+                        {t('Known Languages')} {/* Translate label */}
                       </span>
                     </label>
                     <input
@@ -386,11 +379,11 @@ function CompleteProfilePage() {
                     />
                   </div>
 
-                  {/* Talent Skills Input */}
+                  {/* Talent Skills Input (Remains text) */}
                   <div>
                     <label htmlFor="talentSkills" className="inline-block mb-2">
                       <span className="px-4 py-1 bg-[#A8E6CE] text-gray-800 font-semibold rounded-full shadow-sm inline-flex items-center justify-center cursor-pointer">
-                        {t('Talent/Skills (comma-separated)')} {/* Translate label */}
+                        {t('Talent/Skills')} {/* Translate label */}
                       </span>
                     </label>
                     <input
