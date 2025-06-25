@@ -1,5 +1,5 @@
 // src/App.jsx
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'; // Changed BrowserRouter to HashRouter
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Changed back to BrowserRouter
 import LandingPage from './pages/LandingPage';
 import SignUpPage from './pages/SignUpPage';
 import CompleteProfilePage from './pages/CompleteProfilePage';
@@ -10,7 +10,7 @@ import EditProfilePage from './pages/EditProfilePage';
 
 function App() {
   return (
-    <Router> {/* Now using HashRouter */}
+    <Router> {/* Now using BrowserRouter again */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<SignUpPage />} />
@@ -18,6 +18,7 @@ function App() {
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/edit-profile" element={<EditProfilePage />} />
+        {/* Removed: <Route path="/auth/callback" element={<AuthCallbackPage />} /> */}
       </Routes>
     </Router>
   );
