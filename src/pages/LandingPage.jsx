@@ -13,7 +13,7 @@ function LandingPage() {
     // Main container for the entire landing page
     // Added min-h-screen, w-full, and overflow-x-hidden
     // w-full ensures it takes full width, overflow-x-hidden prevents horizontal scrolling
-    <div className="min-h-screen mx-auto w-[99vw] overflow-x-hidden"> {/* ADDED w-full overflow-x-hidden */}
+    <div className="bg-[#fefef2] min-h-screen mx-auto w-[99vw] overflow-x-hidden"> {/* ADDED w-full overflow-x-hidden */}
 
       {/* Render the Header component */}
       <Header />

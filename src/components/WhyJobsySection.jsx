@@ -9,7 +9,7 @@ function WhyJobsySection() {
 
   return (
     // Section container with ID for navigation
-    <section id="why-jobsy" className="bg-white py-16 px-6">
+    <section id="why-jobsy" className="bg-[#fefef2] py-16 px-6">
       {/* Content container - centered and limited width */}
       {/* Added horizontal padding px-4 sm:px-6 */}
       <div className="max-w-6xl mx-auto text-center px-4 sm:px-6"> {/* Ensure padding is here */}

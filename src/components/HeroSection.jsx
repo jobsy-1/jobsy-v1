@@ -12,7 +12,7 @@ function HeroSection() {
     // Section container - Full viewport height, centered content
     // Added padding-top to account for the fixed header
     // Use a margin-top class that is at least the height of your sticky header
-    <section className=" relative w-full flex items-center justify-center text-center pt-16 md:pt-20 lg:pt-24"> {/* Added pt classes */}
+    <section className="bg-[#fefef2] relative w-full flex items-center justify-center text-center pt-16 md:pt-20 lg:pt-24"> {/* Added pt classes */}
       {/* Content container - centered and limited width */}
       {/* Added horizontal padding px-4 sm:px-6 */}
       <div className=" container my-[10vh] mx-auto px-4 sm:px-6 py-10"> {/* Ensure padding is here */}
@@ -27,7 +27,7 @@ function HeroSection() {
         </p>
 
         <p className="text-lg text-gray-600 mb-10 max-w- mx-auto"> {/* Adjusted max-width, centered */}
-          {t('Jobsy connects talent and employers faster than ever.Post jobs or find your dream role with ease.')} {/* Translated additional text */}
+          {t('Jobsy connects talent and employers faster than ever. Post jobs or find your dream role with ease.')} {/* Translated additional text */}
         </p>
 
         {/* CTA Buttons - Flex layout for side-by-side on larger screens */}
@@ -39,14 +39,12 @@ function HeroSection() {
           >
             {t('create an account')} {/* Translated button text */}
           </Link>
-          {/* Learn More Button - Links to About section (using #) or a separate page - Use t() for button text */}
-           {/* Using <a> for internal page anchor */}
-          <a
-            href="/auth/login" // Link to the About Us section ID
+          <Link
+            to="/auth/login" // Link to the About Us section ID
             className="bg-[#F8B195] hover:bg-[#F67280] text-white font-semibold rounded-full px-8 py-3 transition-colors duration-300"
           >
             {t('Login')} {/* Translated button text */}
-          </a>
+          </Link>
         </div>
 
         {/* Optional: Add an image or illustration here */}
