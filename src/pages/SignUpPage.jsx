@@ -299,7 +299,7 @@ function SignUpPage() {
     <div className="min-h-screen bg-[#fefef2] flex flex-col items-center justify-center p-6 relative">
       {/* Jobsy Logo Link (text-based, styled like header, links to /auth/login) */}
       <div className="absolute top-4 left-6 z-20">
-        <Link to="/auth/login" className="text-xl sm:text-2xl font-bold text-[#60a09b] flex-shrink-0">
+        <Link to="/" className="text-xl sm:text-2xl font-bold text-[#60a09b] flex-shrink-0">
           <span>{t('Jobsy')}</span>
         </Link>
       </div>
